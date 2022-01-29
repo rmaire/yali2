@@ -340,7 +340,7 @@ public class ParserTest {
     public void testFunDefLiteral() {
         
         Reader p = parseAndReturnParser("TO bla :blubb :bli\nprint [Hello World]\nfd 100\nEND");
-        Procedure result = p.getFunctions().getFunctions().get("bla").toProcedureDef();
+        Procedure result = p.getFunctions().getProcedures().get("bla").toProcedureDef();
 
         assertThat(result.type(), is(NodeType.PROCEDURE));
         assertThat(result.getName(), is("bla"));
@@ -376,7 +376,7 @@ public class ParserTest {
 
 //        Node result = read(sb.toString());
         Reader p = parseAndReturnParser(sb.toString());
-        Procedure result = p.getFunctions().getFunctions().get("bla").toProcedureDef();
+        Procedure result = p.getFunctions().getProcedures().get("bla").toProcedureDef();
 
         assertThat(result.type(), is(NodeType.PROCEDURE));
         assertThat(result.getName(), is("bla"));

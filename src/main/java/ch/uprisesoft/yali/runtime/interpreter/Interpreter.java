@@ -35,7 +35,9 @@ import ch.uprisesoft.yali.runtime.procedures.builtin.IO;
 import ch.uprisesoft.yali.runtime.procedures.builtin.Logic;
 import ch.uprisesoft.yali.runtime.procedures.builtin.Template;
 import ch.uprisesoft.yali.scope.Scope;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -50,29 +52,44 @@ public class Interpreter implements OutputObserver {
     private static final Logger logger = LoggerFactory.getLogger(Interpreter.class);
 
 //    private ProcedureDispatcher functions;
-    private Scope variables;
+//    private Scope variables;
     private TreeWalkEvaluator eval;
     
+    // Function definitions
     private Map<String, Procedure> functions = new HashMap<>();
     private Map<String, Integer> arities = new HashMap<>();
 
+    // Call stack
+    private Deque<Scope> scopeStack = new ArrayDeque<>();
+    private Deque<ProcedureCall> callStack = new ArrayDeque<>();
+    
     Interpreter(Scope variables) {
-        this.variables = variables;
+//        this.variables = variables;
+        scopeStack.push(variables);
         eval = new TreeWalkEvaluator(variables, this);
         
     }
 
+    /**
+     * Interpreting functionality 
+     */
+    
     public Node eval(String source) {
         java.util.List<Token> tokens = new Lexer().scan(source);
         Node node = new Reader(this).read(tokens);
-        eval.evaluate(node.getChildren());
+        for(Node pc: node.getChildren()) {
+            eval.evaluate(pc.toProcedureCall());
+        }
+//        eval.evaluate(node.getChildren());
         return eval.getResult();
     }
 
     public Node eval(String source, Scope scope) {
         java.util.List<Token> tokens = new Lexer().scan(source);
         Node node = new Reader(this).read(tokens);
-        eval.evaluate(node.getChildren());
+        for(Node pc: node.getChildren()) {
+            eval.evaluate(pc.toProcedureCall());
+        }
         return eval.getResult();
     }
 
@@ -93,11 +110,7 @@ public class Interpreter implements OutputObserver {
     }
 
     public Scope scope() {
-        return variables;
-    }
-
-    public TreeWalkEvaluator evaluator() {
-        return eval;
+        return scopeStack.peek();
     }
 
     public java.util.List<String> stringify(Node arg) {
@@ -124,25 +137,6 @@ public class Interpreter implements OutputObserver {
         return stringifiedArgs;
     }
 
-    @Override
-    public void inform(String output) {
-        logger.debug("(Interpreter) " + output);
-    }
-
-    public String pretty(String source) {
-        PrettyPrinter pp = new PrettyPrinter();
-        java.util.List<Token> tokens = new Lexer().scan(source);
-        Node node = new Reader(this).read(tokens);
-        for (Node expression : node.getChildren()) {
-            if (expression.type().equals(NodeType.PROCCALL)) {
-                pp.evaluate(expression.toProcedureCall());
-            } else {
-                throw new NodeTypeException(expression, expression.type(), NodeType.PROCCALL);
-            }
-        }
-        return pp.build();
-    }
-    
     public Node apply(String name, Scope scope, java.util.List<Node> args) {
 
         // TODO here is a good place to set parent scope too
@@ -217,7 +211,7 @@ public class Interpreter implements OutputObserver {
         return -1;
     }
 
-    private Scope removaRecursion(Scope scope, int depth) {
+    private Scope removeRecursion(Scope scope, int depth) {
         Scope newParent = scope.getEnclosingScope().get();
         Scope currentScope = scope;
 
@@ -227,6 +221,10 @@ public class Interpreter implements OutputObserver {
 
         return currentScope;
     }
+    
+    /**
+     * Procedure management functionality 
+     */
 
     public void define(Procedure function) {
         functions.put(function.getName(), function);
@@ -241,7 +239,7 @@ public class Interpreter implements OutputObserver {
         return arities;
     }
 
-    public Map<String, Procedure> getFunctions() {
+    public Map<String, Procedure> getProcedures() {
         return functions;
     }
 
@@ -284,5 +282,28 @@ public class Interpreter implements OutputObserver {
         com.registerProcedures(it);
 
         return loadStdLib(it, oo);
+    }
+    
+    /**
+     * Observer and helper methods
+     */
+    
+    @Override
+    public void inform(String output) {
+        logger.debug("(Interpreter) " + output);
+    }
+
+    public String pretty(String source) {
+        PrettyPrinter pp = new PrettyPrinter();
+        java.util.List<Token> tokens = new Lexer().scan(source);
+        Node node = new Reader(this).read(tokens);
+        for (Node expression : node.getChildren()) {
+            if (expression.type().equals(NodeType.PROCCALL)) {
+                pp.evaluate(expression.toProcedureCall());
+            } else {
+                throw new NodeTypeException(expression, expression.type(), NodeType.PROCCALL);
+            }
+        }
+        return pp.build();
     }
 }

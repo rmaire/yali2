@@ -55,26 +55,26 @@ public class TreeWalkEvaluator implements Evaluator {
         this.functions = functions;
     }
 
-    public void evaluate(java.util.List<Node> calls) {
-        for (Node expression : calls) {
-            ProcedureCall fc = expression.toProcedureCall();
-            evaluate(fc);
-        }
-    }
-
-    public void evaluate(java.util.List<Node> calls, Scope scope) {
-//        Scope oldScope = this.scope;
-//        this.scope = scope;
-
-        scopes.push(scope);
-        
-        for (Node expression : calls) {
-            ProcedureCall fc = expression.toProcedureCall();
-            evaluate(fc);
-        }
-
-        scopes.pop();
-    }
+//    public void evaluate(java.util.List<Node> calls) {
+//        for (Node expression : calls) {
+//            ProcedureCall fc = expression.toProcedureCall();
+//            evaluate(fc);
+//        }
+//    }
+//
+//    public void evaluate(java.util.List<Node> calls, Scope scope) {
+////        Scope oldScope = this.scope;
+////        this.scope = scope;
+//
+//        scopes.push(scope);
+//        
+//        for (Node expression : calls) {
+//            ProcedureCall fc = expression.toProcedureCall();
+//            evaluate(fc);
+//        }
+//
+//        scopes.pop();
+//    }
 
     @Override
     public void evaluate(List subject) {
@@ -141,7 +141,7 @@ public class TreeWalkEvaluator implements Evaluator {
             throw new FunctionNotFoundException(funCall.getName());
         }
 
-        Procedure funDef = functions.getFunctions().get(funCall.getName());
+        Procedure funDef = functions.getProcedures().get(funCall.getName());
 
         java.util.List<Node> args = new ArrayList<>();
 

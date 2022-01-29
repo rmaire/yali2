@@ -164,7 +164,7 @@ public class Reader {
 
         if (match(TokenType.TO)) {
 
-            Procedure fun = functions.getFunctions().get(consume(TokenType.SYMBOL).getLexeme());
+            Procedure fun = functions.getProcedures().get(consume(TokenType.SYMBOL).getLexeme());
             pw.indentRight();
             logger.debug("Fundef Body parsing start");
             pw.writeln("Fundef Body start: " + fun.getName());
