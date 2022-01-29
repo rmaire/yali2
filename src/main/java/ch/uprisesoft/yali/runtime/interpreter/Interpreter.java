@@ -51,8 +51,6 @@ public class Interpreter implements OutputObserver {
 
     private static final Logger logger = LoggerFactory.getLogger(Interpreter.class);
 
-//    private ProcedureDispatcher functions;
-//    private Scope variables;
     private TreeWalkEvaluator eval;
     
     // Function definitions
@@ -66,7 +64,7 @@ public class Interpreter implements OutputObserver {
     Interpreter(Scope variables) {
 //        this.variables = variables;
         scopeStack.push(variables);
-        eval = new TreeWalkEvaluator(variables, this);
+        eval = new TreeWalkEvaluator(this);
         
     }
 
@@ -161,7 +159,7 @@ public class Interpreter implements OutputObserver {
         } else {
             logger.debug("(FunctionDispatcher) non-native function");
 
-            TreeWalkEvaluator evaluator = new TreeWalkEvaluator(callScope, this);
+            TreeWalkEvaluator evaluator = new TreeWalkEvaluator(this);
 
             for (Node line : function.getChildren()) {
 

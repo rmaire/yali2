@@ -49,7 +49,7 @@ public class TreeWalkEvaluatorTest {
         ObjectMother om = new ObjectMother();
         l = om.getLexer();
         p = om.getParser();
-        twe = new TreeWalkEvaluator(new Scope("root"), om.getInterpreter());
+        twe = new TreeWalkEvaluator(om.getInterpreter());
     }
 
     private Node parse(String input) {

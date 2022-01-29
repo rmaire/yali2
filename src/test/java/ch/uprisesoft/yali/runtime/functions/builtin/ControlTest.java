@@ -411,58 +411,34 @@ public class ControlTest {
         assertThat(res.toQuotedWord().getQuote(), is("No"));
     }
 
-    @Test
-    public void testLocalMake() {
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("make \"testvar \"Bye!").append("\n");
-        sb.append("\n");
-        sb.append("to testfun").append("\n");
-        sb.append("local \"testvar").append("\n");
-        sb.append("make \"testvar \"Hello!").append("\n");
-        sb.append("print :testvar").append("\n");
-        sb.append("end").append("\n");
-        sb.append("").append("\n");
-        sb.append("testfun").append("\n");
-        sb.append("").append("\n");
-        sb.append("print :testvar").append("\n");
-
-        it.eval(sb.toString());
-
-        assertThat(it.scope().defined("testvar"), is(true));
-        assertThat(it.scope().resolve("testvar").type(), is(NodeType.QUOTE));
-        assertThat(it.scope().resolve("testvar").toQuotedWord().getQuote(), is("Bye!"));
-
-        assertThat(outputs.size(), is(2));
-        assertThat(outputs.get(0), is("Hello!\n"));
-        assertThat(outputs.get(1), is("Bye!\n"));
-    }
+    // TODO
     
-    @Test
-    public void testLocalmake() {
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("make \"testvar \"Bye!").append("\n");
-        sb.append("\n");
-        sb.append("to testfun").append("\n");
-        sb.append("localmake \"testvar \"Hello!").append("\n");
-        sb.append("print :testvar").append("\n");
-        sb.append("end").append("\n");
-        sb.append("").append("\n");
-        sb.append("testfun").append("\n");
-        sb.append("").append("\n");
-        sb.append("print :testvar").append("\n");
-
-        it.eval(sb.toString());
-
-        assertThat(it.scope().defined("testvar"), is(true));
-        assertThat(it.scope().resolve("testvar").type(), is(NodeType.QUOTE));
-        assertThat(it.scope().resolve("testvar").toQuotedWord().getQuote(), is("Bye!"));
-
-        assertThat(outputs.size(), is(2));
-        assertThat(outputs.get(0), is("Hello!\n"));
-        assertThat(outputs.get(1), is("Bye!\n"));
-    }
+//    @Test
+//    public void testLocalMake() {
+//
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("make \"testvar \"Bye!").append("\n");
+//        sb.append("\n");
+//        sb.append("to testfun").append("\n");
+//        sb.append("local \"testvar").append("\n");
+//        sb.append("make \"testvar \"Hello!").append("\n");
+//        sb.append("print :testvar").append("\n");
+//        sb.append("end").append("\n");
+//        sb.append("").append("\n");
+//        sb.append("testfun").append("\n");
+//        sb.append("").append("\n");
+//        sb.append("print :testvar").append("\n");
+//
+//        it.eval(sb.toString());
+//
+//        assertThat(it.scope().defined("testvar"), is(true));
+//        assertThat(it.scope().resolve("testvar").type(), is(NodeType.QUOTE));
+//        assertThat(it.scope().resolve("testvar").toQuotedWord().getQuote(), is("Bye!"));
+//
+//        assertThat(outputs.size(), is(2));
+//        assertThat(outputs.get(0), is("Hello!\n"));
+//        assertThat(outputs.get(1), is("Bye!\n"));
+//    }
     
     @Test
     public void testThing() {
