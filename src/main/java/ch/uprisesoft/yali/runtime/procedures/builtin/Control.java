@@ -225,7 +225,7 @@ public class Control implements ProcedureProvider {
 
         for (int i = 0; i < idx; i++) {
             try {
-                result = it.eval(String.join(" ", it.stringify(block)), workScope);
+                result = it.eval(String.join(" ", it.stringify(block)));
             } catch (Exception ex) {
                 System.out.println(ex.toString() + " -> repeat 2");
             }
@@ -243,7 +243,7 @@ public class Control implements ProcedureProvider {
         
         Node result = Node.none();
         try {
-            result = it.eval(String.join(" ", it.stringify(args.get(0))), workScope);
+            result = it.eval(String.join(" ", it.stringify(args.get(0))));
         } catch (Exception ex) {
             System.out.println(ex.toString() + " -> run");
         }

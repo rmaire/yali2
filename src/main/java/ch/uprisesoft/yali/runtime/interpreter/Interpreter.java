@@ -50,8 +50,6 @@ import org.slf4j.LoggerFactory;
 public class Interpreter implements OutputObserver {
 
     private static final Logger logger = LoggerFactory.getLogger(Interpreter.class);
-
-    private TreeWalkEvaluator eval;
     
     // Function definitions
     private Map<String, Procedure> functions = new HashMap<>();
@@ -62,10 +60,7 @@ public class Interpreter implements OutputObserver {
     private Deque<ProcedureCall> callStack = new ArrayDeque<>();
     
     Interpreter(Scope variables) {
-//        this.variables = variables;
         scopeStack.push(variables);
-        eval = new TreeWalkEvaluator(this);
-        
     }
 
     /**
@@ -75,28 +70,31 @@ public class Interpreter implements OutputObserver {
     public Node eval(String source) {
         java.util.List<Token> tokens = new Lexer().scan(source);
         Node node = new Reader(this).read(tokens);
+        TreeWalkEvaluator eval = new TreeWalkEvaluator(this);
         for(Node pc: node.getChildren()) {
             eval.evaluate(pc.toProcedureCall());
         }
-//        eval.evaluate(node.getChildren());
         return eval.getResult();
     }
 
-    public Node eval(String source, Scope scope) {
-        java.util.List<Token> tokens = new Lexer().scan(source);
-        Node node = new Reader(this).read(tokens);
-        for(Node pc: node.getChildren()) {
-            eval.evaluate(pc.toProcedureCall());
-        }
-        return eval.getResult();
-    }
+//    public Node eval(String source, Scope scope) {
+//        java.util.List<Token> tokens = new Lexer().scan(source);
+//        Node node = new Reader(this).read(tokens);
+//        TreeWalkEvaluator eval = new TreeWalkEvaluator(this);
+//        for(Node pc: node.getChildren()) {
+//            eval.evaluate(pc.toProcedureCall());
+//        }
+//        return eval.getResult();
+//    }
 
     public Node eval(Node node) {
+        TreeWalkEvaluator eval = new TreeWalkEvaluator(this);
         node.accept(eval);
         return eval.getResult();
     }
 
     public Node eval(Node node, Scope scope) {
+        TreeWalkEvaluator eval = new TreeWalkEvaluator(this);
         node.accept(eval);
         return eval.getResult();
     }
