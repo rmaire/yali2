@@ -119,12 +119,6 @@ public class TreeWalkEvaluator implements Evaluator {
         java.util.List<Node> args = new ArrayList<>();
 
         // TODO differentiate between procedures and macros (called with parent scope)
-//        Scope callScope = new Scope(funDef.getName());
-//        callScope.setEnclosingScope(it.scope());
-
-//        if(!funDef.isMacro()) {
-//            it.scope(funDef.getName());
-//        }
 
         int i = 0;
         for (Node c : funCall.getChildren()) {

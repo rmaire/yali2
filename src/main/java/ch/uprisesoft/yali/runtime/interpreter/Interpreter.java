@@ -15,7 +15,6 @@
  */
 package ch.uprisesoft.yali.runtime.interpreter;
 
-import ch.uprisesoft.yali.ast.node.ProcedureCall;
 import ch.uprisesoft.yali.lexer.Lexer;
 import ch.uprisesoft.yali.ast.node.Node;
 import ch.uprisesoft.yali.exception.NodeTypeException;
@@ -41,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,11 +58,11 @@ public class Interpreter implements OutputObserver {
     private Map<String, Integer> arities = new HashMap<>();
 
     // Call stack
-    private Deque<Scope> scopeStack = new ArrayDeque<>();
-    private Deque<ProcedureCall> callStack = new ArrayDeque<>();
+    private List<Scope> scopeStack = new ArrayList<>();
+    private List<Procedure> callStack = new ArrayList<>();
     
     Interpreter(Scope variables) {
-        scopeStack.push(variables);
+        scopeStack.add(variables);
     }
 
     /**
@@ -102,20 +102,27 @@ public class Interpreter implements OutputObserver {
      */
     
     public void defineVar(String name, Node value) {
-        Scope workScope = scope();
         
-        Iterator<Scope> scopes = scopeStack.iterator();
-        while(scopes.hasNext()) {
-            Scope scope = scopes.next();
-            if(scope.defined(name)) {
-                logger.debug("(Scope) defining variable " + name + " in scope " + scope.getScopeName());
-                scope.define(name.toLowerCase(), value);
+        for(int i = scopeStack.size() - 1; i >= 0; i--) {
+            if(scopeStack.get(i).defined(name)) {
+                logger.debug("(Scope) defining variable " + name + " in scope " + scopeStack.get(i).getScopeName());
+                scopeStack.get(i).define(name.toLowerCase(), value);
                 return;
             }
         }
+        
+//        Iterator<Scope> scopes = scopeStack.iterator();
+//        while(scopes.hasNext()) {
+//            Scope scope = scopes.next();
+//            if(scope.defined(name)) {
+//                logger.debug("(Scope) defining variable " + name + " in scope " + scope.getScopeName());
+//                scope.define(name.toLowerCase(), value);
+//                return;
+//            }
+//        }
 
-        logger.debug("(Scope) defining variable " + name + " in scope " + scopeStack.peekLast().getScopeName());
-        scopeStack.peekLast().define(name.toLowerCase(), value);
+        logger.debug("(Scope) defining variable " + name + " in scope " + scopeStack.get(0).getScopeName());
+        scopeStack.get(0).define(name.toLowerCase(), value);
     }
     
     public void localVar(String name) {
@@ -124,42 +131,54 @@ public class Interpreter implements OutputObserver {
     }
 
     public Scope scope() {
-        return scopeStack.peek();
+        return scopeStack.get(scopeStack.size()-1);
     }
     
     public void scope(String name) {
         Scope newScope = new Scope(name);
-        scopeStack.push(newScope);
+        scopeStack.add(newScope);
     }
     
     public void unscope(){
-        scopeStack.pop();
+        scopeStack.remove(scopeStack.size()-1);
     }
     
     public Node resolve(String name) {
         
-        Iterator<Scope> scopes = scopeStack.iterator();
-        
-        while(scopes.hasNext()) {
-            Scope scope = scopes.next();
-            if(scope.defined(name)) {
-                return scope.resolve(name);
+        for(int i = scopeStack.size() - 1; i >= 0; i--) {
+            if(scopeStack.get(i).defined(name)) {
+                return scopeStack.get(i).resolve(name);
             }
         }
+        
+//        Iterator<Scope> scopes = scopeStack.iterator();
+//        
+//        while(scopes.hasNext()) {
+//            Scope scope = scopes.next();
+//            if(scope.defined(name)) {
+//                return scope.resolve(name);
+//            }
+//        }
         
         return Node.none();
     }
     
     public Boolean resolveable(String name) {
         
-        Iterator<Scope> scopes = scopeStack.iterator();
-        
-        while(scopes.hasNext()) {
-            Scope scope = scopes.next();
-            if(scope.defined(name)) {
+        for(int i = scopeStack.size() - 1; i >= 0; i--) {
+            if(scopeStack.get(i).defined(name)) {
                 return true;
             }
         }
+        
+//        Iterator<Scope> scopes = scopeStack.iterator();
+//        
+//        while(scopes.hasNext()) {
+//            Scope scope = scopes.next();
+//            if(scope.defined(name)) {
+//                return true;
+//            }
+//        }
         return false;
     }
 
@@ -196,28 +215,29 @@ public class Interpreter implements OutputObserver {
             throw new FunctionNotFoundException(name);
         }
 
-        Procedure function = functions.get(name);
+        Procedure procedure = functions.get(name);
+        
+        callStack.add(procedure);
 
         // TODO check last function call for recursion       
-//        Scope callScope = scope;
 
         Node result = Node.nil();
         
-        if (!function.isMacro()) {
-            scope(function.getName());
+        if (!procedure.isMacro()) {
+            scope(procedure.getName());
         }
 
         // TODO differentiate from macros
-        if (function.isNative() || function.isMacro()) {
+        if (procedure.isNative() || procedure.isMacro()) {
 
             logger.debug("(FunctionDispatcher) native function");
-            result = function.getNativeCall().apply(scope(), args);
+            result = procedure.getNativeCall().apply(scope(), args);
         } else {
             logger.debug("(FunctionDispatcher) non-native function");
 
             TreeWalkEvaluator evaluator = new TreeWalkEvaluator(this);
 
-            for (Node line : function.getChildren()) {
+            for (Node line : procedure.getChildren()) {
 
                 // every direct child should be a function call
                 if (!line.type().equals(NodeType.PROCCALL)) {
@@ -230,30 +250,25 @@ public class Interpreter implements OutputObserver {
                 // Check if function call is output or stop. If yes, no further
                 // lines will be evaluated
                 if (line.toProcedureCall().getName().equals("output") || line.toProcedureCall().getName().equals("stop")) {
-                    logger.debug("(FunctionDispatcher) function " + function.getName() + " is cancelled.");
+                    logger.debug("(FunctionDispatcher) function " + procedure.getName() + " is cancelled.");
                     break;
                 }
             }
         }
         
-        if (!function.isMacro()) {
+        if (!procedure.isMacro()) {
             unscope();
         }
+        
+        callStack.remove(callStack.size()-1);
 
         return result;
     }
 
-//    private boolean checkIfRecursiveCall(Scope scope) {
-//        String currentName = scope.getScopeName();
-//        Scope currentScope = scope;
-//        while (currentScope.getEnclosingScope().isPresent()) {
-//            currentScope = currentScope.getEnclosingScope().get();
-//            if (currentName.equals(currentScope.getScopeName())) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+    private boolean checkIfRecursiveCall(String name) {
+        
+        return false;
+    }
 
 //    private int calcDistanceToRecurse(Scope scope) {
 //        int dist = 1;
