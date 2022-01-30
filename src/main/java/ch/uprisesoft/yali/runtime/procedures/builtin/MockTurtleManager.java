@@ -101,11 +101,11 @@ public class MockTurtleManager implements ProcedureProvider {
 
     @Override
     public Interpreter registerProcedures(Interpreter it) {
-        it.define(new Procedure("fd", (scope, val) -> this.fd(scope, val), "dist"));
-        it.define(new Procedure("bk", (scope, val) -> this.bk(scope, val), "dist"));
-        it.define(new Procedure("lt", (scope, val) -> this.lt(scope, val), "angle"));
-        it.define(new Procedure("rt", (scope, val) -> this.rt(scope, val), "angle"));
-        it.define(new Procedure("turtlepos", (scope, val) -> this.turtlepos(scope, val)));
+        it.defineProc(new Procedure("fd", (scope, val) -> this.fd(scope, val), "dist"));
+        it.defineProc(new Procedure("bk", (scope, val) -> this.bk(scope, val), "dist"));
+        it.defineProc(new Procedure("lt", (scope, val) -> this.lt(scope, val), "angle"));
+        it.defineProc(new Procedure("rt", (scope, val) -> this.rt(scope, val), "angle"));
+        it.defineProc(new Procedure("turtlepos", (scope, val) -> this.turtlepos(scope, val)));
 
         return it;
     }

@@ -277,9 +277,9 @@ public class Template implements ProcedureProvider {
     public Interpreter registerProcedures(Interpreter interpreter) {
         this.it = interpreter;
 
-        it.define(new Procedure("map", (scope, val) -> this.map(scope, val), "template", "values"));
-        it.define(new Procedure("filter", (scope, val) -> this.filter(scope, val), "template", "values"));
-        it.define(new Procedure("find", (scope, val) -> this.find(scope, val), "template", "values"));
+        it.defineProc(new Procedure("map", (scope, val) -> this.map(scope, val), "template", "values"));
+        it.defineProc(new Procedure("filter", (scope, val) -> this.filter(scope, val), "template", "values"));
+        it.defineProc(new Procedure("find", (scope, val) -> this.find(scope, val), "template", "values"));
 
         return it;
     }

@@ -467,28 +467,28 @@ public class Data implements ProcedureProvider {
     public Interpreter registerProcedures(Interpreter it) {
         this.it = it;
 
-        it.define(new Procedure("uppercase", (scope, val) -> this.uppercase(scope, val), "element"));
-        it.define(new Procedure("lowercase", (scope, val) -> this.lowercase(scope, val), "element"));
-        it.define(new Procedure("count", (scope, val) -> this.count(scope, val), "element"));
-        it.define(new Procedure("equal?", (scope, val) -> this.equalp(scope, val), "fst", "snd"));
-        it.define(new Procedure("member?", (scope, val) -> this.memberp(scope, val), "fst", "snd"));
-        it.define(new Procedure("list?", (scope, val) -> this.listp(scope, val), "list"));
-        it.define(new Procedure("number?", (scope, val) -> this.numberp(scope, val), "number"));
-        it.define(new Procedure("word?", (scope, val) -> this.wordp(scope, val), "word"));
-        it.define(new Procedure("empty?", (scope, val) -> this.emptyp(scope, val), "list"));
-        it.define(new Procedure("setitem", (scope, val) -> this.setitem(scope, val), "index", "list", "newval"));
-        it.define(new Procedure("item", (scope, val) -> this.item(scope, val), "index", "listorword"));
-        it.define(new Procedure("butlast", (scope, val) -> this.butlast(scope, val), "listorword"));
-        it.define(new Procedure("butfirst", (scope, val) -> this.butfirst(scope, val), "listorword"));
-        it.define(new Procedure("last", (scope, val) -> this.last(scope, val), "listorword"));
-        it.define(new Procedure("first", (scope, val) -> this.first(scope, val), "listorword"));
-        it.define(new Procedure("reverse", (scope, val) -> this.reverse(scope, val), "list"));
-        it.define(new Procedure("fput", (scope, val) -> this.fput(scope, val), "fst", "snd"));
-        it.define(new Procedure("lput", (scope, val) -> this.lput(scope, val), "fst", "snd"));
-        it.define(new Procedure("word", (scope, val) -> this.word(scope, val), "fst", "snd"));
-        it.define(new Procedure("list", (scope, val) -> this.list(scope, val), "fst", "snd"));
-        it.define(new Procedure("sentence", (scope, val) -> this.sentence(scope, val), "fst", "snd"));
-        it.define(new Procedure("gensym", (scope, val) -> this.gensym(scope, val)));
+        it.defineProc(new Procedure("uppercase", (scope, val) -> this.uppercase(scope, val), "element"));
+        it.defineProc(new Procedure("lowercase", (scope, val) -> this.lowercase(scope, val), "element"));
+        it.defineProc(new Procedure("count", (scope, val) -> this.count(scope, val), "element"));
+        it.defineProc(new Procedure("equal?", (scope, val) -> this.equalp(scope, val), "fst", "snd"));
+        it.defineProc(new Procedure("member?", (scope, val) -> this.memberp(scope, val), "fst", "snd"));
+        it.defineProc(new Procedure("list?", (scope, val) -> this.listp(scope, val), "list"));
+        it.defineProc(new Procedure("number?", (scope, val) -> this.numberp(scope, val), "number"));
+        it.defineProc(new Procedure("word?", (scope, val) -> this.wordp(scope, val), "word"));
+        it.defineProc(new Procedure("empty?", (scope, val) -> this.emptyp(scope, val), "list"));
+        it.defineProc(new Procedure("setitem", (scope, val) -> this.setitem(scope, val), "index", "list", "newval"));
+        it.defineProc(new Procedure("item", (scope, val) -> this.item(scope, val), "index", "listorword"));
+        it.defineProc(new Procedure("butlast", (scope, val) -> this.butlast(scope, val), "listorword"));
+        it.defineProc(new Procedure("butfirst", (scope, val) -> this.butfirst(scope, val), "listorword"));
+        it.defineProc(new Procedure("last", (scope, val) -> this.last(scope, val), "listorword"));
+        it.defineProc(new Procedure("first", (scope, val) -> this.first(scope, val), "listorword"));
+        it.defineProc(new Procedure("reverse", (scope, val) -> this.reverse(scope, val), "list"));
+        it.defineProc(new Procedure("fput", (scope, val) -> this.fput(scope, val), "fst", "snd"));
+        it.defineProc(new Procedure("lput", (scope, val) -> this.lput(scope, val), "fst", "snd"));
+        it.defineProc(new Procedure("word", (scope, val) -> this.word(scope, val), "fst", "snd"));
+        it.defineProc(new Procedure("list", (scope, val) -> this.list(scope, val), "fst", "snd"));
+        it.defineProc(new Procedure("sentence", (scope, val) -> this.sentence(scope, val), "fst", "snd"));
+        it.defineProc(new Procedure("gensym", (scope, val) -> this.gensym(scope, val)));
 
         return it;
     }

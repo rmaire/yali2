@@ -161,12 +161,12 @@ public class Logic implements ProcedureProvider {
     public Interpreter registerProcedures(Interpreter it) {
         this.it = it;
 
-        it.define(new Procedure("equal?", (scope, val) -> this.equal(scope, val), "fst", "snd"));
-        it.define(new Procedure("notequal?", (scope, val) -> this.inequal(scope, val), "fst", "snd"));
-        it.define(new Procedure("less?", (scope, val) -> this.less(scope, val), "fst", "snd"));
-        it.define(new Procedure("greater?", (scope, val) -> this.greater(scope, val), "fst", "snd"));
-        it.define(new Procedure("greaterequal?", (scope, val) -> this.greaterorequal(scope, val), "fst", "snd"));
-        it.define(new Procedure("lessequal?", (scope, val) -> this.lessorequal(scope, val), "fst", "snd"));
+        it.defineProc(new Procedure("equal?", (scope, val) -> this.equal(scope, val), "fst", "snd"));
+        it.defineProc(new Procedure("notequal?", (scope, val) -> this.inequal(scope, val), "fst", "snd"));
+        it.defineProc(new Procedure("less?", (scope, val) -> this.less(scope, val), "fst", "snd"));
+        it.defineProc(new Procedure("greater?", (scope, val) -> this.greater(scope, val), "fst", "snd"));
+        it.defineProc(new Procedure("greaterequal?", (scope, val) -> this.greaterorequal(scope, val), "fst", "snd"));
+        it.defineProc(new Procedure("lessequal?", (scope, val) -> this.lessorequal(scope, val), "fst", "snd"));
 
         return it;
     }

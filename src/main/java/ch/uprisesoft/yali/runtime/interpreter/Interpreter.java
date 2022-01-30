@@ -100,6 +100,26 @@ public class Interpreter implements OutputObserver {
     /**
      * Variable management 
      */
+    
+    public void defineVar(String name, Node value) {
+        Scope workScope = scope();
+        
+        Iterator<Scope> scopes = scopeStack.iterator();
+        while(scopes.hasNext()) {
+            Scope scope = scopes.next();
+            if(scope.defined(name)) {
+                workScope = scope;
+            }
+        }
+
+        logger.debug("(Scope) defining variable " + name + " in scope " + workScope.getScopeName());
+        workScope.define(name.toLowerCase(), value);
+    }
+    
+    public void localVar(String name) {
+        logger.debug("(Scope) Reserve local variable " + name + " in scope " + scope().getScopeName());
+        scope().local(name.toLowerCase());
+    }
 
     public Scope scope() {
         return scopeStack.peek();
@@ -256,7 +276,7 @@ public class Interpreter implements OutputObserver {
      * Procedure management functionality 
      */
 
-    public void define(Procedure function) {
+    public void defineProc(Procedure function) {
         functions.put(function.getName(), function);
         arities.put(function.getName(), function.getArity());
     }
