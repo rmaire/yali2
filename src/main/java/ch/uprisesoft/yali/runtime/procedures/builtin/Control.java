@@ -55,7 +55,7 @@ public class Control implements ProcedureProvider {
         
         logger.debug("(Control) resolvong variable " + name + " in scope " + scope.getScopeName());
 
-        Node value = scope.resolve(name);
+        Node value = it.resolve(name);
 
         return value;
     }

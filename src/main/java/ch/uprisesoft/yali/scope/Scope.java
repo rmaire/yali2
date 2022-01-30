@@ -67,21 +67,13 @@ public class Scope {
         if (members.containsKey(name.toLowerCase())) {
             logger.debug("(Scope) variable " + name + " found");
             return members.get(name.toLowerCase());
-        } else if (enclosingScope.isPresent() && enclosingScope.get().resolve(name) != null) {
-            logger.debug("(Scope) variable " + name + " not found in scope " + scopeName + ". Trying in parent scope");
-            return enclosingScope.get().resolve(name);
-        } else if (!enclosingScope.isPresent()) {
-            logger.debug("(Scope) variable " + name + " not found in any scope");
-            throw new VariableNotFoundException(name);
-        }
+        } 
+
         return Node.none();
     }
 
     public void define(String name, Node value) {
         Scope workScope = this;
-        while (!workScope.defined(name) && workScope.getEnclosingScope().isPresent()) {
-            workScope = workScope.getEnclosingScope().get();
-        }
 
         logger.debug("(Scope) defining variable " + name + " in scope " + workScope.scopeName);
         workScope.members.put(name.toLowerCase(), value);

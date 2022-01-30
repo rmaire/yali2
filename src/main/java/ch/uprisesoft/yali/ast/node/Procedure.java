@@ -76,10 +76,6 @@ public class Procedure extends Node {
     public Boolean isMacro() {
         return funType == FunctionType.MACRO;
     }
-    
-    public Boolean isUser() {
-        return funType == FunctionType.YALI;
-    }
 
     public void setArgs(List<String> args) {
         this.args = args;

@@ -35,10 +35,12 @@ import ch.uprisesoft.yali.runtime.procedures.builtin.IO;
 import ch.uprisesoft.yali.runtime.procedures.builtin.Logic;
 import ch.uprisesoft.yali.runtime.procedures.builtin.Template;
 import ch.uprisesoft.yali.scope.Scope;
+import ch.uprisesoft.yali.scope.VariableNotFoundException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,16 +79,6 @@ public class Interpreter implements OutputObserver {
         return eval.getResult();
     }
 
-//    public Node eval(String source, Scope scope) {
-//        java.util.List<Token> tokens = new Lexer().scan(source);
-//        Node node = new Reader(this).read(tokens);
-//        TreeWalkEvaluator eval = new TreeWalkEvaluator(this);
-//        for(Node pc: node.getChildren()) {
-//            eval.evaluate(pc.toProcedureCall());
-//        }
-//        return eval.getResult();
-//    }
-
     public Node eval(Node node) {
         TreeWalkEvaluator eval = new TreeWalkEvaluator(this);
         node.accept(eval);
@@ -104,9 +96,37 @@ public class Interpreter implements OutputObserver {
         Node node = new Reader(this).read(tokens);
         return node;
     }
+    
+    /**
+     * Variable management 
+     */
 
     public Scope scope() {
         return scopeStack.peek();
+    }
+    
+    public void scope(String name) {
+        Scope newScope = new Scope(name);
+        newScope.setEnclosingScope(scopeStack.peek());
+        scopeStack.push(newScope);
+    }
+    
+    public void unscope(){
+        scopeStack.pop();
+    }
+    
+    public Node resolve(String name) {
+        
+        Iterator<Scope> scopes = scopeStack.iterator();
+        
+        while(scopes.hasNext()) {
+            Scope scope = scopes.next();
+            if(scope.defined(name)) {
+                return scope.resolve(name);
+            }
+        }
+        
+        return Node.none();
     }
 
     public java.util.List<String> stringify(Node arg) {
@@ -145,7 +165,7 @@ public class Interpreter implements OutputObserver {
         Procedure function = functions.get(name);
 
         // TODO check last function call for recursion       
-        Scope callScope = scope;
+//        Scope callScope = scope;
 
         Node result = Node.nil();
 
@@ -153,7 +173,7 @@ public class Interpreter implements OutputObserver {
         if (function.isNative() || function.isMacro()) {
 
             logger.debug("(FunctionDispatcher) native function");
-            result = function.getNativeCall().apply(callScope, args);
+            result = function.getNativeCall().apply(scope(), args);
         } else {
             logger.debug("(FunctionDispatcher) non-native function");
 

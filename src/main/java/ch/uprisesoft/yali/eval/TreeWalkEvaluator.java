@@ -102,7 +102,7 @@ public class TreeWalkEvaluator implements Evaluator {
     @Override
     public void evaluate(ReferenceWord subject) {
         logger.debug("(eval) Reference word: " + subject.toString());
-        Node value = it.scope().resolve(subject.toReferenceWord().getReference());
+        Node value = it.resolve(subject.toReferenceWord().getReference());
         result = value;
     }
 
@@ -119,14 +119,18 @@ public class TreeWalkEvaluator implements Evaluator {
         java.util.List<Node> args = new ArrayList<>();
 
         // TODO differentiate between procedures and macros (called with parent scope)
-        Scope callScope = new Scope(funDef.getName());
-        callScope.setEnclosingScope(it.scope());
+//        Scope callScope = new Scope(funDef.getName());
+//        callScope.setEnclosingScope(it.scope());
+
+        if(!funDef.isMacro()) {
+            it.scope(funDef.getName());
+        }
 
         int i = 0;
         for (Node c : funCall.getChildren()) {
             c.accept(this);
             if (i < funDef.getArity()) {
-                callScope.define(
+                it.scope().define(
                         funDef.getArgs().get(i),
                         result
                 );
@@ -136,8 +140,12 @@ public class TreeWalkEvaluator implements Evaluator {
         }
 
         logger.debug("(eval) dispatching " + funCall.getName());
-        result = it.apply(funCall.getName(), callScope, args);
+        result = it.apply(funCall.getName(), it.scope(), args);
         logger.debug("(eval) Function Call " + funCall.getName() + " end");
+        
+        if(!funDef.isMacro()) {
+            it.unscope();
+        }
     }
 
     public Node getResult() {

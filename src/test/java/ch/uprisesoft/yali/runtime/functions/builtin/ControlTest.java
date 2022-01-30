@@ -81,9 +81,9 @@ public class ControlTest {
     public void testMake() {
         it.eval("make \"testit \"someval");
 
-        assertThat(it.scope().defined("testit"), is(true));
-        assertThat(it.scope().resolve("testit").type(), is(NodeType.QUOTE));
-        assertThat(it.scope().resolve("testit").toQuotedWord().getQuote(), is("someval"));
+//        assertThat(it.scope().defined("testit"), is(true));
+        assertThat(it.resolve("testit").type(), is(NodeType.QUOTE));
+        assertThat(it.resolve("testit").toQuotedWord().getQuote(), is("someval"));
     }
     
     @Test
@@ -93,8 +93,8 @@ public class ControlTest {
 
         it.eval(input);
 
-        assertThat(it.scope().defined("testvar"), is(true));
-        assertThat(it.scope().resolve("testvar").toQuotedWord().getQuote(), is("one"));
+//        assertThat(it.scope().defined("testvar"), is(true));
+        assertThat(it.resolve("testvar").toQuotedWord().getQuote(), is("one"));
     }
 
     @Test
@@ -189,9 +189,9 @@ public class ControlTest {
         sb.append("repeat :count [make \"testvar \"yes]").append("\n");
         Node res = it.eval(sb.toString());
 
-        assertThat(it.scope().defined("testvar"), is(true));
-        assertThat(it.scope().resolve("testvar").type(), is(NodeType.QUOTE));
-        assertThat(it.scope().resolve("testvar").toQuotedWord().getQuote(), is("yes"));
+//        assertThat(it.scope().defined("testvar"), is(true));
+        assertThat(it.resolve("testvar").type(), is(NodeType.QUOTE));
+        assertThat(it.resolve("testvar").toQuotedWord().getQuote(), is("yes"));
     }
     
         @Test
@@ -200,9 +200,9 @@ public class ControlTest {
         sb.append("if true [make \"testvar \"yes]").append("\n");
         Node res = it.eval(sb.toString());
 
-        assertThat(it.scope().defined("testvar"), is(true));
-        assertThat(it.scope().resolve("testvar").type(), is(NodeType.QUOTE));
-        assertThat(it.scope().resolve("testvar").toQuotedWord().getQuote(), is("yes"));
+//        assertThat(it.scope().defined("testvar"), is(true));
+        assertThat(it.resolve("testvar").type(), is(NodeType.QUOTE));
+        assertThat(it.resolve("testvar").toQuotedWord().getQuote(), is("yes"));
     }
 
     @Test
@@ -236,9 +236,9 @@ public class ControlTest {
         Node res = it.eval(sb.toString());
 
         assertThat(res.type(), is(NodeType.NIL));
-        assertThat(it.scope().defined("testvar"), is(true));
-        assertThat(it.scope().resolve("testvar").type(), is(NodeType.QUOTE));
-        assertThat(it.scope().resolve("testvar").toQuotedWord().getQuote(), is("yes"));
+//        assertThat(it.scope().defined("testvar"), is(true));
+        assertThat(it.resolve("testvar").type(), is(NodeType.QUOTE));
+        assertThat(it.resolve("testvar").toQuotedWord().getQuote(), is("yes"));
     }
 
     @Test
@@ -450,9 +450,9 @@ public class ControlTest {
 
         it.eval(sb.toString());
 
-        assertThat(it.scope().defined("testvar"), is(true));
-        assertThat(it.scope().resolve("testvar").type(), is(NodeType.QUOTE));
-        assertThat(it.scope().resolve("testvar").toQuotedWord().getQuote(), is("Hello!"));
+//        assertThat(it.scope().defined("testvar"), is(true));
+        assertThat(it.resolve("testvar").type(), is(NodeType.QUOTE));
+        assertThat(it.resolve("testvar").toQuotedWord().getQuote(), is("Hello!"));
 
         assertThat(outputs.size(), is(1));
         assertThat(outputs.get(0), is("Hello!\n"));
