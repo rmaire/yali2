@@ -272,7 +272,7 @@ public class Control implements ProcedureProvider {
         it.define(new Procedure("thing", (scope, val) -> this.thing(scope, val), "name"));
         it.define(new Procedure("make", (scope, val) -> this.make(scope, val), "name", "value").macro());
         it.define(new Procedure("local", (scope, val) -> this.local(scope, val), "name"));
-        it.define(new Procedure("localmake", (scope, val) -> this.localmake(scope, val), "name", "value").macro());
+        it.define(new Procedure("localmake", (scope, val) -> this.localmake(scope, val), "name", "value"));
         it.define(new Procedure("repeat", (scope, val) -> this.repeat(scope, val), "control", "block").macro());
         it.define(new Procedure("run", (scope, val) -> this.run(scope, val), "block").macro());
         it.define(new Procedure("output", (scope, val) -> this.output(scope, val), "block"));

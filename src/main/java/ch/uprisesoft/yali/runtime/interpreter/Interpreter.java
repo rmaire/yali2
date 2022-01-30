@@ -128,6 +128,20 @@ public class Interpreter implements OutputObserver {
         
         return Node.none();
     }
+    
+    public Boolean resolveable(String name) {
+        
+        Iterator<Scope> scopes = scopeStack.iterator();
+        
+        while(scopes.hasNext()) {
+            Scope scope = scopes.next();
+            if(scope.defined(name)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 
     public java.util.List<String> stringify(Node arg) {
         java.util.List<String> stringifiedArgs = new ArrayList<>();
