@@ -65,9 +65,9 @@ public class Control implements ProcedureProvider {
         Scope workScope = scope;
         
         // Variable should be defined in calling scope, not in make scope
-        if (scope.getEnclosingScope().isPresent()) {
-            workScope = scope.getEnclosingScope().get();
-        }
+//        if (scope.getEnclosingScope().isPresent()) {
+//            workScope = scope.getEnclosingScope().get();
+//        }
         
         switch (args.get(0).type()) {
             case SYMBOL:
@@ -92,11 +92,6 @@ public class Control implements ProcedureProvider {
         String name = "";
         Scope workScope = scope;
         
-        // Variable should be defined in calling scope, not in make scope
-        if (scope.getEnclosingScope().isPresent()) {
-            workScope = scope.getEnclosingScope().get();
-        }
-        
         switch (args.get(0).type()) {
             case SYMBOL:
                 name = args.get(0).toSymbolWord().getSymbol();
@@ -111,7 +106,7 @@ public class Control implements ProcedureProvider {
         logger.debug("(Control) defining variable " + name + " in scope " + workScope.getScopeName());
 
         newVar = args.get(1);
-        workScope.define(name, newVar);
+        it.defineVar(name, newVar);
 
         return newVar;
     }
@@ -120,11 +115,6 @@ public class Control implements ProcedureProvider {
         Node newVar = null;
         String name = "";
         Scope workScope = scope;
-        
-        // Variable should be defined in calling scope, not in make scope
-        if (scope.getEnclosingScope().isPresent()) {
-            workScope = scope.getEnclosingScope().get();
-        }
         
         switch (args.get(0).type()) {
             case SYMBOL:
@@ -141,7 +131,7 @@ public class Control implements ProcedureProvider {
 
         newVar = args.get(1);
         it.localVar(name);
-        workScope.define(name, newVar);
+        it.defineVar(name, newVar);
 
         return newVar;
     }
@@ -194,9 +184,9 @@ public class Control implements ProcedureProvider {
     public Node repeat(Scope scope, java.util.List<Node> args) {
 
         Scope workScope = scope;
-        if (scope.getEnclosingScope().isPresent()) {
-            workScope = scope.getEnclosingScope().get();
-        }
+//        if (scope.getEnclosingScope().isPresent()) {
+//            workScope = scope.getEnclosingScope().get();
+//        }
 
         Node control = args.get(0);
         Node block = args.get(1);
@@ -237,9 +227,9 @@ public class Control implements ProcedureProvider {
     public Node run(Scope scope, java.util.List<Node> args) {
 
         Scope workScope = scope;
-        if (scope.getEnclosingScope().isPresent()) {
-            workScope = scope.getEnclosingScope().get();
-        }
+//        if (scope.getEnclosingScope().isPresent()) {
+//            workScope = scope.getEnclosingScope().get();
+//        }
         
         Node result = Node.none();
         try {
@@ -271,8 +261,8 @@ public class Control implements ProcedureProvider {
         it.defineProc(new Procedure("alias", (scope, val) -> this.alias(scope, val), "original", "alias"));
         it.defineProc(new Procedure("thing", (scope, val) -> this.thing(scope, val), "name"));
         it.defineProc(new Procedure("make", (scope, val) -> this.make(scope, val), "name", "value").macro());
-        it.defineProc(new Procedure("local", (scope, val) -> this.local(scope, val), "name"));
-        it.defineProc(new Procedure("localmake", (scope, val) -> this.localmake(scope, val), "name", "value"));
+        it.defineProc(new Procedure("local", (scope, val) -> this.local(scope, val), "name").macro());
+        it.defineProc(new Procedure("localmake", (scope, val) -> this.localmake(scope, val), "name", "value").macro());
         it.defineProc(new Procedure("repeat", (scope, val) -> this.repeat(scope, val), "control", "block").macro());
         it.defineProc(new Procedure("run", (scope, val) -> this.run(scope, val), "block").macro());
         it.defineProc(new Procedure("output", (scope, val) -> this.output(scope, val), "block"));

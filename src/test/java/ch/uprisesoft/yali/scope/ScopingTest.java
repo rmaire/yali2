@@ -138,27 +138,31 @@ public class ScopingTest {
         assertThat(outputs.get(1), is("20\n"));
     }
     
-//    @Test
-//    public void testLocalAndMakeInProcedureWithoutOverride() {
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("make \"testvar 20").append("\n");
-//        sb.append("to makeinproc").append("\n");
-//        sb.append("local \"testvar").append("\n");
-//        sb.append("make \"testvar 10").append("\n");
-//        sb.append("print :testvar").append("\n");
-//        sb.append("end").append("\n");
-//        sb.append("makeinproc").append("\n");
-//        sb.append("print :testvar").append("\n");
-//        Node res = it.eval(sb.toString());
-//
-//        assertThat(it.resolveable("testvar"), is(true));
-//        assertThat(it.resolve("testvar").type(), is(NodeType.INTEGER));
-//        assertThat(it.resolve("testvar").toIntegerWord().getInteger(), is(20));
-//
-//        assertThat(outputs.size(), is(2));
-//        assertThat(outputs.get(0), is("10\n"));
-//        assertThat(outputs.get(1), is("20\n"));
-//    }
+    @Test
+    public void testLocalAndMakeInProcedureWithoutOverride() {
+        System.out.println("=============");
+        System.out.println("testLocalAndMakeInProcedureWithoutOverride");
+        System.out.println("=============");
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append("make \"testvar 20").append("\n");
+        sb.append("to makeinproc").append("\n");
+        sb.append("local \"testvar").append("\n");
+        sb.append("make \"testvar 10").append("\n");
+        sb.append("print :testvar").append("\n");
+        sb.append("end").append("\n");
+        sb.append("makeinproc").append("\n");
+        sb.append("print :testvar").append("\n");
+        Node res = it.eval(sb.toString());
+
+        assertThat(it.resolveable("testvar"), is(true));
+        assertThat(it.resolve("testvar").type(), is(NodeType.INTEGER));
+        assertThat(it.resolve("testvar").toIntegerWord().getInteger(), is(20));
+
+        assertThat(outputs.size(), is(2));
+        assertThat(outputs.get(0), is("10\n"));
+        assertThat(outputs.get(1), is("20\n"));
+    }
     
     @Test
     public void testLMakeInProcedureinBlock() {

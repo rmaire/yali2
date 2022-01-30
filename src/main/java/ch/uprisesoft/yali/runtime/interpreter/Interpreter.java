@@ -108,12 +108,14 @@ public class Interpreter implements OutputObserver {
         while(scopes.hasNext()) {
             Scope scope = scopes.next();
             if(scope.defined(name)) {
-                workScope = scope;
+                logger.debug("(Scope) defining variable " + name + " in scope " + scope.getScopeName());
+                scope.define(name.toLowerCase(), value);
+                return;
             }
         }
 
-        logger.debug("(Scope) defining variable " + name + " in scope " + workScope.getScopeName());
-        workScope.define(name.toLowerCase(), value);
+        logger.debug("(Scope) defining variable " + name + " in scope " + scopeStack.peekLast().getScopeName());
+        scopeStack.peekLast().define(name.toLowerCase(), value);
     }
     
     public void localVar(String name) {
@@ -127,7 +129,6 @@ public class Interpreter implements OutputObserver {
     
     public void scope(String name) {
         Scope newScope = new Scope(name);
-        newScope.setEnclosingScope(scopeStack.peek());
         scopeStack.push(newScope);
     }
     
@@ -159,7 +160,6 @@ public class Interpreter implements OutputObserver {
                 return true;
             }
         }
-        
         return false;
     }
 
@@ -202,6 +202,10 @@ public class Interpreter implements OutputObserver {
 //        Scope callScope = scope;
 
         Node result = Node.nil();
+        
+        if (!function.isMacro()) {
+            scope(function.getName());
+        }
 
         // TODO differentiate from macros
         if (function.isNative() || function.isMacro()) {
@@ -231,46 +235,50 @@ public class Interpreter implements OutputObserver {
                 }
             }
         }
+        
+        if (!function.isMacro()) {
+            unscope();
+        }
 
         return result;
     }
 
-    private boolean checkIfRecursiveCall(Scope scope) {
-        String currentName = scope.getScopeName();
-        Scope currentScope = scope;
-        while (currentScope.getEnclosingScope().isPresent()) {
-            currentScope = currentScope.getEnclosingScope().get();
-            if (currentName.equals(currentScope.getScopeName())) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    private boolean checkIfRecursiveCall(Scope scope) {
+//        String currentName = scope.getScopeName();
+//        Scope currentScope = scope;
+//        while (currentScope.getEnclosingScope().isPresent()) {
+//            currentScope = currentScope.getEnclosingScope().get();
+//            if (currentName.equals(currentScope.getScopeName())) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
-    private int calcDistanceToRecurse(Scope scope) {
-        int dist = 1;
-        String currentName = scope.getScopeName();
-        Scope currentScope = scope;
-        while (currentScope.getEnclosingScope().isPresent()) {
-            dist++;
-            currentScope = currentScope.getEnclosingScope().get();
-            if (currentName.equals(currentScope.getScopeName())) {
-                return dist;
-            }
-        }
-        return -1;
-    }
+//    private int calcDistanceToRecurse(Scope scope) {
+//        int dist = 1;
+//        String currentName = scope.getScopeName();
+//        Scope currentScope = scope;
+//        while (currentScope.getEnclosingScope().isPresent()) {
+//            dist++;
+//            currentScope = currentScope.getEnclosingScope().get();
+//            if (currentName.equals(currentScope.getScopeName())) {
+//                return dist;
+//            }
+//        }
+//        return -1;
+//    }
 
-    private Scope removeRecursion(Scope scope, int depth) {
-        Scope newParent = scope.getEnclosingScope().get();
-        Scope currentScope = scope;
-
-        for (int i = 0; i < depth; i++) {
-            currentScope = currentScope.getEnclosingScope().get();
-        }
-
-        return currentScope;
-    }
+//    private Scope removeRecursion(Scope scope, int depth) {
+//        Scope newParent = scope.getEnclosingScope().get();
+//        Scope currentScope = scope;
+//
+//        for (int i = 0; i < depth; i++) {
+//            currentScope = currentScope.getEnclosingScope().get();
+//        }
+//
+//        return currentScope;
+//    }
     
     /**
      * Procedure management functionality 

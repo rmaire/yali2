@@ -122,15 +122,15 @@ public class TreeWalkEvaluator implements Evaluator {
 //        Scope callScope = new Scope(funDef.getName());
 //        callScope.setEnclosingScope(it.scope());
 
-        if(!funDef.isMacro()) {
-            it.scope(funDef.getName());
-        }
+//        if(!funDef.isMacro()) {
+//            it.scope(funDef.getName());
+//        }
 
         int i = 0;
         for (Node c : funCall.getChildren()) {
             c.accept(this);
             if (i < funDef.getArity()) {
-                it.scope().define(
+                it.defineVar(
                         funDef.getArgs().get(i),
                         result
                 );
@@ -143,9 +143,9 @@ public class TreeWalkEvaluator implements Evaluator {
         result = it.apply(funCall.getName(), it.scope(), args);
         logger.debug("(eval) Function Call " + funCall.getName() + " end");
         
-        if(!funDef.isMacro()) {
-            it.unscope();
-        }
+//        if(!funDef.isMacro()) {
+//            it.unscope();
+//        }
     }
 
     public Node getResult() {

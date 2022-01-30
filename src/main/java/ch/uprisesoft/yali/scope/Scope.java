@@ -50,13 +50,9 @@ public class Scope {
         return scopeName;
     }
 
-    public void setEnclosingScope(Scope scope) {
-        this.enclosingScope = Optional.of(scope);
-    }
-
-    public Optional<Scope> getEnclosingScope() {
-        return enclosingScope;
-    }
+//    public Optional<Scope> getEnclosingScope() {
+//        return enclosingScope;
+//    }
 
     public Node getCode() {
         return code;
@@ -75,7 +71,7 @@ public class Scope {
     public void define(String name, Node value) {
         Scope workScope = this;
 
-        logger.debug("(Scope) defining variable " + name + " in scope " + workScope.scopeName);
+//        logger.debug("(Scope) defining variable " + name + " in scope " + workScope.scopeName);
         workScope.members.put(name.toLowerCase(), value);
     }
 
