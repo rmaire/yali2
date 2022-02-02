@@ -34,12 +34,8 @@ import ch.uprisesoft.yali.runtime.procedures.builtin.IO;
 import ch.uprisesoft.yali.runtime.procedures.builtin.Logic;
 import ch.uprisesoft.yali.runtime.procedures.builtin.Template;
 import ch.uprisesoft.yali.scope.Scope;
-import ch.uprisesoft.yali.scope.VariableNotFoundException;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -52,7 +48,7 @@ import org.slf4j.LoggerFactory;
 public class Interpreter implements OutputObserver {
 
     private static final Logger logger = LoggerFactory.getLogger(Interpreter.class);
-    
+
     // Function definitions
     private Map<String, Procedure> functions = new HashMap<>();
     private Map<String, Integer> arities = new HashMap<>();
@@ -60,34 +56,33 @@ public class Interpreter implements OutputObserver {
     // Call stack
     private List<Scope> scopeStack = new ArrayList<>();
     private List<Procedure> callStack = new ArrayList<>();
-    
+
     Interpreter(Scope variables) {
         scopeStack.add(variables);
     }
 
     /**
-     * Interpreting functionality 
+     * Interpreting functionality
      */
-    
     public Node eval(String source) {
         java.util.List<Token> tokens = new Lexer().scan(source);
         Node node = new Reader(this).read(tokens);
-        TreeWalkEvaluator eval = new TreeWalkEvaluator(this);
-        for(Node pc: node.getChildren()) {
-            eval.evaluate(pc.toProcedureCall());
+        Node result = Node.none();
+        for (Node pc : node.getChildren()) {
+            result = eval(pc.toProcedureCall());
         }
-        return eval.getResult();
+        return result;
     }
 
     public Node eval(Node node) {
-        TreeWalkEvaluator eval = new TreeWalkEvaluator(this);
-        node.accept(eval);
-        return eval.getResult();
-    }
 
-    public Node eval(Node node, Scope scope) {
         TreeWalkEvaluator eval = new TreeWalkEvaluator(this);
-        node.accept(eval);
+        try {
+            node.accept(eval);
+        } catch (StackOverflowError soe) {
+            node.accept(eval);
+        }
+
         return eval.getResult();
     }
 
@@ -96,89 +91,61 @@ public class Interpreter implements OutputObserver {
         Node node = new Reader(this).read(tokens);
         return node;
     }
-    
+
     /**
-     * Variable management 
+     * Variable management
      */
-    
     public void defineVar(String name, Node value) {
-        
-        for(int i = scopeStack.size() - 1; i >= 0; i--) {
-            if(scopeStack.get(i).defined(name)) {
+
+        for (int i = scopeStack.size() - 1; i >= 0; i--) {
+            if (scopeStack.get(i).defined(name)) {
                 logger.debug("(Scope) defining variable " + name + " in scope " + scopeStack.get(i).getScopeName());
                 scopeStack.get(i).define(name.toLowerCase(), value);
                 return;
             }
         }
-        
-//        Iterator<Scope> scopes = scopeStack.iterator();
-//        while(scopes.hasNext()) {
-//            Scope scope = scopes.next();
-//            if(scope.defined(name)) {
-//                logger.debug("(Scope) defining variable " + name + " in scope " + scope.getScopeName());
-//                scope.define(name.toLowerCase(), value);
-//                return;
-//            }
-//        }
 
         logger.debug("(Scope) defining variable " + name + " in scope " + scopeStack.get(0).getScopeName());
         scopeStack.get(0).define(name.toLowerCase(), value);
     }
-    
+
     public void localVar(String name) {
         logger.debug("(Scope) Reserve local variable " + name + " in scope " + scope().getScopeName());
         scope().local(name.toLowerCase());
     }
 
     public Scope scope() {
-        return scopeStack.get(scopeStack.size()-1);
+        return scopeStack.get(scopeStack.size() - 1);
     }
-    
+
     public void scope(String name) {
         Scope newScope = new Scope(name);
         scopeStack.add(newScope);
     }
-    
-    public void unscope(){
-        scopeStack.remove(scopeStack.size()-1);
+
+    public void unscope() {
+        scopeStack.remove(scopeStack.size() - 1);
     }
-    
+
     public Node resolve(String name) {
-        
-        for(int i = scopeStack.size() - 1; i >= 0; i--) {
-            if(scopeStack.get(i).defined(name)) {
+
+        for (int i = scopeStack.size() - 1; i >= 0; i--) {
+            if (scopeStack.get(i).defined(name)) {
                 return scopeStack.get(i).resolve(name);
             }
         }
-        
-//        Iterator<Scope> scopes = scopeStack.iterator();
-//        
-//        while(scopes.hasNext()) {
-//            Scope scope = scopes.next();
-//            if(scope.defined(name)) {
-//                return scope.resolve(name);
-//            }
-//        }
-        
+
         return Node.none();
     }
-    
+
     public Boolean resolveable(String name) {
-        
-        for(int i = scopeStack.size() - 1; i >= 0; i--) {
-            if(scopeStack.get(i).defined(name)) {
+
+        for (int i = scopeStack.size() - 1; i >= 0; i--) {
+            if (scopeStack.get(i).defined(name)) {
                 return true;
             }
         }
-        
-//        Iterator<Scope> scopes = scopeStack.iterator();
-//        
-//        while(scopes.hasNext()) {
-//            Scope scope = scopes.next();
-//            if(scope.defined(name)) {
-//                return true;
-//            }
-//        }
+
         return false;
     }
 
@@ -206,23 +173,25 @@ public class Interpreter implements OutputObserver {
         return stringifiedArgs;
     }
 
-    public Node apply(String name, Scope scope, java.util.List<Node> args) {
+    public Node apply(String name, java.util.List<Node> args) {
 
-        // TODO here is a good place to set parent scope too
-        logger.debug("(FunctionDispatcher) dispatch function " + name + " with scope " + scope.getScopeName());
+        logger.debug("(FunctionDispatcher) dispatch function " + name + " with scope " + scope().getScopeName());
 
         if (!functions.containsKey(name)) {
             throw new FunctionNotFoundException(name);
         }
 
         Procedure procedure = functions.get(name);
-        
+
         callStack.add(procedure);
 
-        // TODO check last function call for recursion       
+        // TODO check last function call for recursion
+        if (checkIfRecursiveCall(name)) {
+            removeRecursion(name);
+        }
 
         Node result = Node.nil();
-        
+
         if (!procedure.isMacro()) {
             scope(procedure.getName());
         }
@@ -231,7 +200,10 @@ public class Interpreter implements OutputObserver {
         if (procedure.isNative() || procedure.isMacro()) {
 
             logger.debug("(FunctionDispatcher) native function");
+
             result = procedure.getNativeCall().apply(scope(), args);
+
+//            result = procedure.getNativeCall().apply(scope(), args);
         } else {
             logger.debug("(FunctionDispatcher) non-native function");
 
@@ -244,61 +216,77 @@ public class Interpreter implements OutputObserver {
                     throw new NodeTypeException(line, line.type(), NodeType.PROCCALL);
                 }
 
-                line.accept(evaluator);
-                result = evaluator.getResult();
-
                 // Check if function call is output or stop. If yes, no further
                 // lines will be evaluated
                 if (line.toProcedureCall().getName().equals("output") || line.toProcedureCall().getName().equals("stop")) {
                     logger.debug("(FunctionDispatcher) function " + procedure.getName() + " is cancelled.");
                     break;
                 }
+
+                line.accept(evaluator);
+                result = evaluator.getResult();
             }
         }
-        
+
         if (!procedure.isMacro()) {
             unscope();
         }
-        
-        callStack.remove(callStack.size()-1);
+
+        callStack.remove(callStack.size() - 1);
+//        callStack.remove(procedure);
 
         return result;
     }
 
     private boolean checkIfRecursiveCall(String name) {
-        
+
+        if (scopeStack.size() < 2) {
+            return false;
+        }
+        if (callStack.size() < 2) {
+            return false;
+        }
+
+        for (int i = scopeStack.size() - 2; i >= 0; i--) {
+            if (scopeStack.get(i).getScopeName().equals(name)) {
+                return true;
+            }
+        }
         return false;
     }
 
-//    private int calcDistanceToRecurse(Scope scope) {
-//        int dist = 1;
-//        String currentName = scope.getScopeName();
-//        Scope currentScope = scope;
-//        while (currentScope.getEnclosingScope().isPresent()) {
-//            dist++;
-//            currentScope = currentScope.getEnclosingScope().get();
-//            if (currentName.equals(currentScope.getScopeName())) {
-//                return dist;
-//            }
-//        }
-//        return -1;
-//    }
+    private void removeRecursion(String name) {
+        Scope actualScope = scopeStack.get(scopeStack.size() - 1);
+        Procedure actualCall = callStack.get(callStack.size() - 1);
 
-//    private Scope removeRecursion(Scope scope, int depth) {
-//        Scope newParent = scope.getEnclosingScope().get();
-//        Scope currentScope = scope;
-//
-//        for (int i = 0; i < depth; i++) {
-//            currentScope = currentScope.getEnclosingScope().get();
-//        }
-//
-//        return currentScope;
-//    }
-    
+        // Remove scopes
+        // First one needs to be removed anyway
+        scopeStack.remove(scopeStack.size() - 1);
+        for (int i = scopeStack.size() - 1; i >= 0; i--) {
+            if (scopeStack.get(i).getScopeName().equals(name)) {
+                scopeStack.add(actualScope);
+                break;
+            } else {
+                scopeStack.remove(i);
+            }
+        }
+
+        // Remove calls
+        // First one needs to be removed anyway
+        callStack.remove(callStack.size() - 1);
+        for (int i = callStack.size() - 1; i >= 0; i--) {
+            if (callStack.get(i).getName().equals(name)) {
+                callStack.add(actualCall);
+                break;
+            } else {
+                callStack.remove(i);
+            }
+        }
+    }
+
     /**
-     * Procedure management functionality 
+     * Procedure management functionality
      */
-
     public void defineProc(Procedure function) {
         functions.put(function.getName(), function);
         arities.put(function.getName(), function.getArity());
@@ -356,11 +344,10 @@ public class Interpreter implements OutputObserver {
 
         return loadStdLib(it, oo);
     }
-    
+
     /**
      * Observer and helper methods
      */
-    
     @Override
     public void inform(String output) {
         logger.debug("(Interpreter) " + output);

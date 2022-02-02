@@ -260,17 +260,18 @@ public class InterpreterTest {
 ////        assertThat(outputs.size(), is(1));
 ////        assertThat(outputs.get(0), is("test\n"));
 //    }
-//    @Test
-//    public void testRecursion() {
-//        String input = "to recurse :i\n"
-//                + "print :i\n"
-//                + "recurse :i + 1\n"
-//                + "end\n"
-//                + "\n"
-//                + "recurse 1\n";
-//
-//        Node res = it.eval(input);
-//    }
+    
+    @Test
+    public void testRecursion() {
+        String input = "to recurse :i\n"
+                + "print :i\n"
+                + "recurse :i + 1\n"
+                + "end\n"
+                + "\n"
+                + "recurse 1\n";
+
+        Node res = it.eval(input);
+    }
     
 //    @Test
 //    public void testRecursion2() {
@@ -283,6 +284,14 @@ public class InterpreterTest {
 //                + "recurse 4000\n";
 //
 //        Node res = it.eval(input);
+//        
+//        assertThat(outputs.size(), is(4001));
+//        
+//        for(int i = 4000; i >= 0; i--) {
+//            assertThat(outputs.get(4000-i), is(i + "\n"));
+//        }
+////        assertThat(outputs.get(0), is("4000\n"));
+//        
 //    }
     
 //    @Test

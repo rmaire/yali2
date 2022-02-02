@@ -123,43 +123,43 @@ public class PrettyPrinter implements Evaluator {
         pw.writeln(subject.toString());
     }
 
-    public void evaluate(Node node) {
-        switch (node.type()) {
-            case LIST:
-                evaluate(node.toList());
-                break;
-            case BOOLEAN:
-                evaluate(node.toBooleanWord());
-                break;
-            case FLOAT:
-                evaluate(node.toFloatWord());
-                break;
-            case PROCCALL:
-                evaluate(node.toProcedureCall());
-                break;
-            case PROCEDURE:
-                evaluate(node.toProcedureDef());
-                break;
-            case INTEGER:
-                evaluate(node.toIntegerWord());
-                break;
-            case NIL:
-                evaluate(node.toNilWord());
-                break;
-            case NONE:
-                evaluate(node.toNoWord());
-                break;
-            case QUOTE:
-                evaluate(node.toQuotedWord());
-                break;
-            case REFERENCE:
-                evaluate(node.toReferenceWord());
-                break;
-            case SYMBOL:
-                evaluate(node.toSymbolWord());
-                break;
-        }
-    }
+//    public void evaluate(Node node) {
+//        switch (node.type()) {
+//            case LIST:
+//                evaluate(node.toList());
+//                break;
+//            case BOOLEAN:
+//                evaluate(node.toBooleanWord());
+//                break;
+//            case FLOAT:
+//                evaluate(node.toFloatWord());
+//                break;
+//            case PROCCALL:
+//                evaluate(node.toProcedureCall());
+//                break;
+//            case PROCEDURE:
+//                evaluate(node.toProcedureDef());
+//                break;
+//            case INTEGER:
+//                evaluate(node.toIntegerWord());
+//                break;
+//            case NIL:
+//                evaluate(node.toNilWord());
+//                break;
+//            case NONE:
+//                evaluate(node.toNoWord());
+//                break;
+//            case QUOTE:
+//                evaluate(node.toQuotedWord());
+//                break;
+//            case REFERENCE:
+//                evaluate(node.toReferenceWord());
+//                break;
+//            case SYMBOL:
+//                evaluate(node.toSymbolWord());
+//                break;
+//        }
+//    }
 
     public String build() {
         return pw.toString();

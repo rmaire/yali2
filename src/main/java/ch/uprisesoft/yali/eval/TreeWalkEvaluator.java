@@ -120,6 +120,7 @@ public class TreeWalkEvaluator implements Evaluator {
 
         // TODO differentiate between procedures and macros (called with parent scope)
 
+        
         int i = 0;
         for (Node c : funCall.getChildren()) {
             c.accept(this);
@@ -134,12 +135,9 @@ public class TreeWalkEvaluator implements Evaluator {
         }
 
         logger.debug("(eval) dispatching " + funCall.getName());
-        result = it.apply(funCall.getName(), it.scope(), args);
+        result = it.apply(funCall.getName(), args);
         logger.debug("(eval) Function Call " + funCall.getName() + " end");
         
-//        if(!funDef.isMacro()) {
-//            it.unscope();
-//        }
     }
 
     public Node getResult() {

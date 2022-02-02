@@ -194,7 +194,7 @@ public class Control implements ProcedureProvider {
         if (!control.type().equals(NodeType.INTEGER)) {
             Node res = Node.none();
             try {
-                res = it.eval(control, workScope);
+                res = it.eval(control);
             } catch (Exception ex) {
                 System.out.println(ex.toString() + " -> repeat 1");
             }

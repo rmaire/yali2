@@ -105,9 +105,9 @@ public class IOTest {
     public void testReadlist() {
         Node res = it.eval("make \"testvar readlist\nprint :testvar");
         
-        System.out.println("========================");
-        System.out.println(res.toString());
-        System.out.println("========================");
+//        System.out.println("========================");
+//        System.out.println(res.toString());
+//        System.out.println("========================");
         assertThat(outputs.size(), is(1));
         assertThat(outputs.get(0), is("requestedinputline\n"));
 
