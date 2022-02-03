@@ -51,16 +51,13 @@ public class Interpreter implements OutputObserver {
 
     // Function definitions
     private Map<String, Procedure> functions = new HashMap<>();
-    private Map<String, Integer> arities = new HashMap<>();
+//    private Map<String, Integer> arities = new HashMap<>();
 
     // Call stack
     private List<Scope> scopeStack = new ArrayList<>();
-    { scopeStack.add( new Scope("global" )); }
     private List<Procedure> callStack = new ArrayList<>();
-
-//    Interpreter(Scope variables) {
-//        scopeStack.add(variables);
-//    }
+    
+    { scopeStack.add( new Scope("global" )); }
 
     /**
      * Interpreting functionality
@@ -290,16 +287,16 @@ public class Interpreter implements OutputObserver {
      */
     public void defineProc(Procedure function) {
         functions.put(function.getName(), function);
-        arities.put(function.getName(), function.getArity());
+//        arities.put(function.getName(), function.getArity());
     }
 
     public Boolean defined(String name) {
         return functions.containsKey(name);
     }
 
-    public Map<String, Integer> getArities() {
-        return arities;
-    }
+//    public Map<String, Integer> getArities() {
+//        return arities;
+//    }
 
     public Map<String, Procedure> getProcedures() {
         return functions;
@@ -311,7 +308,7 @@ public class Interpreter implements OutputObserver {
         }
 
         functions.put(alias, functions.get(original));
-        arities.put(alias, functions.get(original).getArity());
+//        arities.put(alias, functions.get(original).getArity());
     }
 
     public Interpreter loadStdLib(Interpreter it, OutputObserver oo) {

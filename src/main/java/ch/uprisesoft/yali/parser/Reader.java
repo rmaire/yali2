@@ -206,13 +206,13 @@ public class Reader {
     private Node funCall() {
         Node node = Node.none();
 
-        if (current().type().equals(TokenType.SYMBOL) && functions.getArities().containsKey(current().getLexeme().toLowerCase())) {
+        if (current().type().equals(TokenType.SYMBOL) && functions.getProcedures().containsKey(current().getLexeme().toLowerCase())) {
 
             pw.writeln("Funcall start: " + current().getLexeme());
             pw.indentRight();
 
             String name = current().getLexeme();
-            int arity = functions.getArities().get(name);
+            int arity = functions.getProcedures().get(name).getArity();
             advance();
 
             Call call = new Call(name, arity);
