@@ -171,7 +171,7 @@ public class Interpreter implements OutputObserver {
         return stringifiedArgs;
     }
     
-        public Node apply(Call call, java.util.List<Node> args) {
+        public Node apply(Call call) {
 
         logger.debug("(FunctionDispatcher) dispatch function " + call.name() + " with scope " + scope().getScopeName());
 
@@ -199,7 +199,7 @@ public class Interpreter implements OutputObserver {
 
             logger.debug("(FunctionDispatcher) native function");
 
-            result = procedure.getNativeCall().apply(scope(), args);
+            result = procedure.getNativeCall().apply(scope(), call.args());
 
         } else {
             logger.debug("(FunctionDispatcher) non-native function");

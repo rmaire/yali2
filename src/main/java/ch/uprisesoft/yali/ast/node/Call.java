@@ -16,6 +16,8 @@
 package ch.uprisesoft.yali.ast.node;
 
 import ch.uprisesoft.yali.eval.Evaluator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -28,6 +30,16 @@ public class Call extends Node {
     private final int arity;
     
     private Node code;
+    
+    private java.util.List<Node> args = new ArrayList<>();
+    
+    public Call(String name, int arity, Node code, java.util.List<Node> args) {
+        super(NodeType.PROCCALL);
+        this.name = name;
+        this.arity = arity;
+        this.code = code;
+        this.args.addAll(args);
+    }
     
     public Call(String name, int arity, Node code) {
         super(NodeType.PROCCALL);
@@ -65,8 +77,14 @@ public class Call extends Node {
     public void code(Node code) {
         this.code = code;
     }
-    
-    
+
+    public List<Node> args() {
+        return args;
+    }
+
+    public void args(List<Node> args) {
+        this.args.addAll(args);
+    }
 
     public Boolean isExtraCall() {
         return arity < 0;

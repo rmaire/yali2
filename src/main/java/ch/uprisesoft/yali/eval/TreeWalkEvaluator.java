@@ -107,14 +107,14 @@ public class TreeWalkEvaluator implements Evaluator {
     }
 
     @Override
-    public void evaluate(Call funCall) {
+    public void evaluate(Call call) {
 
-        logger.debug("(eval) Function Call " + funCall.name());
-        if (!it.defined(funCall.name())) {
-            throw new FunctionNotFoundException(funCall.name());
+        logger.debug("(eval) Function Call " + call.name());
+        if (!it.defined(call.name())) {
+            throw new FunctionNotFoundException(call.name());
         }
 
-        Procedure funDef = it.getProcedures().get(funCall.name());
+        Procedure funDef = it.getProcedures().get(call.name());
 
         java.util.List<Node> args = new ArrayList<>();
 
@@ -122,7 +122,7 @@ public class TreeWalkEvaluator implements Evaluator {
 
         
         int i = 0;
-        for (Node c : funCall.getChildren()) {
+        for (Node c : call.getChildren()) {
             c.accept(this);
             if (i < funDef.getArity()) {
                 it.defineVar(
@@ -133,10 +133,12 @@ public class TreeWalkEvaluator implements Evaluator {
             }
             args.add(result);
         }
+        
+        call.args(args);
 
-        logger.debug("(eval) dispatching " + funCall.name());
-        result = it.apply(funCall, args);
-        logger.debug("(eval) Function Call " + funCall.name() + " end");
+        logger.debug("(eval) dispatching " + call.name());
+        result = it.apply(call);
+        logger.debug("(eval) Function Call " + call.name() + " end");
         
     }
 
