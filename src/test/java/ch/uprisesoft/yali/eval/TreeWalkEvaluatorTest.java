@@ -16,7 +16,7 @@
 package ch.uprisesoft.yali.eval;
 
 import ch.qos.logback.classic.Level;
-import ch.uprisesoft.yali.ast.node.ProcedureCall;
+import ch.uprisesoft.yali.ast.node.Call;
 import ch.uprisesoft.yali.parser.Reader;
 import ch.uprisesoft.yali.ast.node.Node;
 import ch.uprisesoft.yali.ast.node.NodeType;
@@ -65,7 +65,7 @@ public class TreeWalkEvaluatorTest {
     public void testBasicAddition() {
         String input = "5 + 3.0";
 
-        ProcedureCall node = (ProcedureCall) parse(input);
+        Call node = (Call) parse(input);
         Node result = eval(node);
 
         assertThat(result.type(), is(NodeType.FLOAT));
@@ -77,7 +77,7 @@ public class TreeWalkEvaluatorTest {
     public void testMultipleAddition() {
         String input = "5 + 3 + 2 + 5";
 
-        ProcedureCall node = (ProcedureCall) parse(input);
+        Call node = (Call) parse(input);
         Node result = eval(node);
 
         assertThat(result.type(), is(NodeType.INTEGER));
@@ -92,7 +92,7 @@ public class TreeWalkEvaluatorTest {
 
         String input = "5 + 3 + 2.0 + 5";
 
-        ProcedureCall node = (ProcedureCall) parse(input);
+        Call node = (Call) parse(input);
         Node result = eval(node);
 
         assertThat(result.type(), is(NodeType.FLOAT));

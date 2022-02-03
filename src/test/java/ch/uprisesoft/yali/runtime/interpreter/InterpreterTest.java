@@ -261,17 +261,17 @@ public class InterpreterTest {
 ////        assertThat(outputs.get(0), is("test\n"));
 //    }
     
-    @Test
-    public void testRecursion() {
-        String input = "to recurse :i\n"
-                + "print :i\n"
-                + "recurse :i + 1\n"
-                + "end\n"
-                + "\n"
-                + "recurse 1\n";
-
-        Node res = it.eval(input);
-    }
+//    @Test
+//    public void testRecursion() {
+//        String input = "to recurse :i\n"
+//                + "print :i\n"
+//                + "recurse :i + 1\n"
+//                + "end\n"
+//                + "\n"
+//                + "recurse 1\n";
+//
+//        Node res = it.eval(input);
+//    }
     
 //    @Test
 //    public void testRecursion2() {

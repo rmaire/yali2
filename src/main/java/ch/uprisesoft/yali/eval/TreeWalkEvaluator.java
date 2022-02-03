@@ -15,7 +15,7 @@
  */
 package ch.uprisesoft.yali.eval;
 
-import ch.uprisesoft.yali.ast.node.ProcedureCall;
+import ch.uprisesoft.yali.ast.node.Call;
 import ch.uprisesoft.yali.ast.node.Procedure;
 import ch.uprisesoft.yali.ast.node.List;
 import ch.uprisesoft.yali.ast.node.Node;
@@ -107,14 +107,14 @@ public class TreeWalkEvaluator implements Evaluator {
     }
 
     @Override
-    public void evaluate(ProcedureCall funCall) {
+    public void evaluate(Call funCall) {
 
-        logger.debug("(eval) Function Call " + funCall.getName());
-        if (!it.defined(funCall.getName())) {
-            throw new FunctionNotFoundException(funCall.getName());
+        logger.debug("(eval) Function Call " + funCall.name());
+        if (!it.defined(funCall.name())) {
+            throw new FunctionNotFoundException(funCall.name());
         }
 
-        Procedure funDef = it.getProcedures().get(funCall.getName());
+        Procedure funDef = it.getProcedures().get(funCall.name());
 
         java.util.List<Node> args = new ArrayList<>();
 
@@ -134,9 +134,9 @@ public class TreeWalkEvaluator implements Evaluator {
             args.add(result);
         }
 
-        logger.debug("(eval) dispatching " + funCall.getName());
-        result = it.apply(funCall.getName(), args);
-        logger.debug("(eval) Function Call " + funCall.getName() + " end");
+        logger.debug("(eval) dispatching " + funCall.name());
+        result = it.apply(funCall.name(), args);
+        logger.debug("(eval) Function Call " + funCall.name() + " end");
         
     }
 

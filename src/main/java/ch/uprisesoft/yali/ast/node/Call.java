@@ -22,30 +22,51 @@ import java.util.stream.Collectors;
  *
  * @author uprisesoft@gmail.com
  */
-public class ProcedureCall extends Node {
+public class Call extends Node {
 
     private final String name;
     private final int arity;
-
-    public ProcedureCall(String name, int arity) {
+    
+    private Node code;
+    
+    public Call(String name, int arity, Node code) {
         super(NodeType.PROCCALL);
         this.name = name;
         this.arity = arity;
+        this.code = code;
     }
 
-    public ProcedureCall(String name) {
+    public Call(String name, int arity) {
+        super(NodeType.PROCCALL);
+        this.name = name;
+        this.arity = arity;
+        this.code = Node.none();
+    }
+
+    public Call(String name) {
         super(NodeType.PROCCALL);
         this.name = name;
         this.arity = -1;
+        this.code = Node.none();
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public int getArity() {
+    public int arity() {
         return arity;
     }
+
+    public Node code() {
+        return code;
+    }
+
+    public void code(Node code) {
+        this.code = code;
+    }
+    
+    
 
     public Boolean isExtraCall() {
         return arity < 0;
@@ -53,7 +74,7 @@ public class ProcedureCall extends Node {
 
     @Override
     public void accept(Evaluator evaluator) {
-        evaluator.evaluate(this.toProcedureCall());
+        evaluator.evaluate(this.toCall());
     }
 
     @Override
@@ -91,11 +112,11 @@ public class ProcedureCall extends Node {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof ProcedureCall)) {
+        if (obj == null || !(obj instanceof Call)) {
             return false;
         }
 
-        final ProcedureCall other = (ProcedureCall) obj;
+        final Call other = (Call) obj;
 
         if (this.hashCode() == other.hashCode()) {
             return true;

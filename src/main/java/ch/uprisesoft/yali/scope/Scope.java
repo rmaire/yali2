@@ -16,7 +16,7 @@
 package ch.uprisesoft.yali.scope;
 
 import ch.uprisesoft.yali.ast.node.Node;
-import ch.uprisesoft.yali.ast.node.ProcedureCall;
+import ch.uprisesoft.yali.ast.node.Call;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -41,7 +41,7 @@ public class Scope {
         this.scopeName = scopeName;
     }
     
-    public Scope(ProcedureCall code, String scopeName) {
+    public Scope(Call code, String scopeName) {
         this.code = code;
         this.scopeName = scopeName;
     }

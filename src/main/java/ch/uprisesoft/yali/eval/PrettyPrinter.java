@@ -15,7 +15,7 @@
  */
 package ch.uprisesoft.yali.eval;
 
-import ch.uprisesoft.yali.ast.node.ProcedureCall;
+import ch.uprisesoft.yali.ast.node.Call;
 import ch.uprisesoft.yali.ast.node.Procedure;
 import ch.uprisesoft.yali.ast.node.List;
 import ch.uprisesoft.yali.ast.node.Node;
@@ -75,8 +75,8 @@ public class PrettyPrinter implements Evaluator {
     }
 
     @Override
-    public void evaluate(ProcedureCall subject) {
-        pw.writeln(subject.getName() + "/" + subject.getArity() + " => ");
+    public void evaluate(Call subject) {
+        pw.writeln(subject.name() + "/" + subject.arity() + " => ");
         pw.indentRight();
         for (Node c : subject.getChildren()) {
             c.accept(this);
@@ -135,7 +135,7 @@ public class PrettyPrinter implements Evaluator {
 //                evaluate(node.toFloatWord());
 //                break;
 //            case PROCCALL:
-//                evaluate(node.toProcedureCall());
+//                evaluate(node.toCall());
 //                break;
 //            case PROCEDURE:
 //                evaluate(node.toProcedureDef());

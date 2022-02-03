@@ -134,11 +134,11 @@ public abstract class Node {
         return (ReferenceWord) this;
     }
 
-    public ProcedureCall toProcedureCall(  Node this) throws NodeTypeException {
+    public Call toCall(  Node this) throws NodeTypeException {
         if (this.type() != NodeType.PROCCALL) {
             throw new NodeTypeException(this, this.type(), NodeType.PROCCALL);
         }
-        return (ProcedureCall) this;
+        return (Call) this;
     }
 
     public Procedure toProcedureDef(  Node this) throws NodeTypeException {

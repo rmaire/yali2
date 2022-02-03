@@ -15,7 +15,7 @@
  */
 package ch.uprisesoft.yali.runtime.procedures.builtin;
 
-import ch.uprisesoft.yali.ast.node.ProcedureCall;
+import ch.uprisesoft.yali.ast.node.Call;
 import ch.uprisesoft.yali.ast.node.Procedure;
 import ch.uprisesoft.yali.ast.node.List;
 import ch.uprisesoft.yali.ast.node.Node;
@@ -62,7 +62,8 @@ public class Template implements ProcedureProvider {
                         realizedValues.add(n);
                     }
                 }
-                ProcedureCall run = new ProcedureCall("run");
+                Call run = new Call("run");
+                run.code(it.getProcedures().get("run"));
                 run.addChild(new List(realizedValues));
                 results.add(Node.symbol(it.eval(run).toString()));
             }
@@ -83,7 +84,8 @@ public class Template implements ProcedureProvider {
                         realizedValues.add(n);
                     }
                 }
-                ProcedureCall run = new ProcedureCall("run");
+                Call run = new Call("run");
+                run.code(it.getProcedures().get("run"));
                 run.addChild(new List(realizedValues));
                 results += it.eval(run).toString();
             }
@@ -119,7 +121,8 @@ public class Template implements ProcedureProvider {
                         realizedValues.add(n);
                     }
                 }
-                ProcedureCall run = new ProcedureCall("run");
+                Call run = new Call("run");
+                run.code(it.getProcedures().get("run"));
                 run.addChild(new List(realizedValues));
                 Node result = it.eval(run);
 
@@ -148,7 +151,8 @@ public class Template implements ProcedureProvider {
                         realizedValues.add(n);
                     }
                 }
-                ProcedureCall run = new ProcedureCall("run");
+                Call run = new Call("run");
+                run.code(it.getProcedures().get("run"));
                 run.addChild(new List(realizedValues));
                 Node result = it.eval(run);
 
@@ -189,7 +193,8 @@ public class Template implements ProcedureProvider {
                         realizedValues.add(n);
                     }
                 }
-                ProcedureCall run = new ProcedureCall("run");
+                Call run = new Call("run");
+                run.code(it.getProcedures().get("run"));
                 run.addChild(new List(realizedValues));
                 Node result = it.eval(run);
 
@@ -215,7 +220,8 @@ public class Template implements ProcedureProvider {
                         realizedValues.add(n);
                     }
                 }
-                ProcedureCall run = new ProcedureCall("run");
+                Call run = new Call("run");
+                run.code(it.getProcedures().get("run"));
                 run.addChild(new List(realizedValues));
                 Node result = it.eval(run);
 
@@ -257,7 +263,7 @@ public class Template implements ProcedureProvider {
 //                    realizedValues.add(n);
 //                }
 //            }
-//            ProcedureCall run = new ProcedureCall("run");
+//            Call run = new Call("run");
 //            run.addChild(new List(realizedValues));
 //            Node result = it.eval(run);
 //

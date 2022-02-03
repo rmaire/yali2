@@ -15,10 +15,9 @@
  */
 package ch.uprisesoft.yali.eval;
 
-import ch.uprisesoft.yali.ast.node.ProcedureCall;
+import ch.uprisesoft.yali.ast.node.Call;
 import ch.uprisesoft.yali.ast.node.Procedure;
 import ch.uprisesoft.yali.ast.node.List;
-import ch.uprisesoft.yali.ast.node.Node;
 import ch.uprisesoft.yali.ast.node.word.BooleanWord;
 import ch.uprisesoft.yali.ast.node.word.FloatWord;
 import ch.uprisesoft.yali.ast.node.word.IntegerWord;
@@ -35,7 +34,7 @@ public interface Evaluator {
     public void evaluate(IntegerWord subject);
     public void evaluate(NilWord subject);
     public void evaluate(QuotedWord subject);
-    public void evaluate(ProcedureCall subject);
+    public void evaluate(Call subject);
     public void evaluate(Procedure subject);
     public void evaluate(NoWord subject);
     public void evaluate(ReferenceWord subject);

@@ -55,11 +55,12 @@ public class Interpreter implements OutputObserver {
 
     // Call stack
     private List<Scope> scopeStack = new ArrayList<>();
+    { scopeStack.add( new Scope("global" )); }
     private List<Procedure> callStack = new ArrayList<>();
 
-    Interpreter(Scope variables) {
-        scopeStack.add(variables);
-    }
+//    Interpreter(Scope variables) {
+//        scopeStack.add(variables);
+//    }
 
     /**
      * Interpreting functionality
@@ -69,7 +70,7 @@ public class Interpreter implements OutputObserver {
         Node node = new Reader(this).read(tokens);
         Node result = Node.none();
         for (Node pc : node.getChildren()) {
-            result = eval(pc.toProcedureCall());
+            result = eval(pc.toCall());
         }
         return result;
     }
@@ -218,7 +219,7 @@ public class Interpreter implements OutputObserver {
 
                 // Check if function call is output or stop. If yes, no further
                 // lines will be evaluated
-                if (line.toProcedureCall().getName().equals("output") || line.toProcedureCall().getName().equals("stop")) {
+                if (line.toCall().name().equals("output") || line.toCall().name().equals("stop")) {
                     logger.debug("(FunctionDispatcher) function " + procedure.getName() + " is cancelled.");
                     break;
                 }
@@ -359,7 +360,7 @@ public class Interpreter implements OutputObserver {
         Node node = new Reader(this).read(tokens);
         for (Node expression : node.getChildren()) {
             if (expression.type().equals(NodeType.PROCCALL)) {
-                pp.evaluate(expression.toProcedureCall());
+                pp.evaluate(expression.toCall());
             } else {
                 throw new NodeTypeException(expression, expression.type(), NodeType.PROCCALL);
             }

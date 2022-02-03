@@ -40,7 +40,7 @@ public class InterpreterBuilder {
             variables = new Scope("global");
         }
 
-        Interpreter it = new Interpreter(variables);
+        Interpreter it = new Interpreter();
 
         if (oo != null && ig != null) {
             it.loadStdLib(it, oo, ig);

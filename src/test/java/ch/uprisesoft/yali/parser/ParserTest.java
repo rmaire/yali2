@@ -207,10 +207,10 @@ public class ParserTest {
         Node result = parse("7 - 5 * 3 / (2 + -5)");
 
         assertThat(result.getChildren().get(0).type(), is(NodeType.PROCCALL));
-        assertThat(result.getChildren().get(0).toProcedureCall().getName(), is("sub"));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).type(), is(NodeType.INTEGER));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).toIntegerWord().getInteger(), is(7));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(1).type(), is(NodeType.PROCCALL));
+        assertThat(result.getChildren().get(0).toCall().name(), is("sub"));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).type(), is(NodeType.INTEGER));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).toIntegerWord().getInteger(), is(7));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(1).type(), is(NodeType.PROCCALL));
 
     }
 
@@ -219,11 +219,11 @@ public class ParserTest {
         Node result = parse("5 >= 7");
 
         assertThat(result.getChildren().get(0).type(), is(NodeType.PROCCALL));
-        assertThat(result.getChildren().get(0).toProcedureCall().getName(), is("greaterequal?"));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).type(), is(NodeType.INTEGER));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).toIntegerWord().getInteger(), is(5));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(1).type(), is(NodeType.INTEGER));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(1).toIntegerWord().getInteger(), is(7));
+        assertThat(result.getChildren().get(0).toCall().name(), is("greaterequal?"));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).type(), is(NodeType.INTEGER));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).toIntegerWord().getInteger(), is(5));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(1).type(), is(NodeType.INTEGER));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(1).toIntegerWord().getInteger(), is(7));
     }
 
     @Test
@@ -231,11 +231,11 @@ public class ParserTest {
         Node result = parse("5 = 7.0");
 
         assertThat(result.getChildren().get(0).type(), is(NodeType.PROCCALL));
-        assertThat(result.getChildren().get(0).toProcedureCall().getName(), is("equal?"));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).type(), is(NodeType.INTEGER));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).toIntegerWord().getInteger(), is(5));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(1).type(), is(NodeType.FLOAT));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(1).toFloatWord().getFloat(), is(7.0));
+        assertThat(result.getChildren().get(0).toCall().name(), is("equal?"));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).type(), is(NodeType.INTEGER));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).toIntegerWord().getInteger(), is(5));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(1).type(), is(NodeType.FLOAT));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(1).toFloatWord().getFloat(), is(7.0));
     }
     
         @Test
@@ -243,11 +243,11 @@ public class ParserTest {
         Node result = parse("5.0 == 7");
 
         assertThat(result.getChildren().get(0).type(), is(NodeType.PROCCALL));
-        assertThat(result.getChildren().get(0).toProcedureCall().getName(), is("equal?"));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).type(), is(NodeType.FLOAT));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).toFloatWord().getFloat(), is(5.0));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(1).type(), is(NodeType.INTEGER));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(1).toIntegerWord().getInteger(), is(7));
+        assertThat(result.getChildren().get(0).toCall().name(), is("equal?"));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).type(), is(NodeType.FLOAT));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).toFloatWord().getFloat(), is(5.0));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(1).type(), is(NodeType.INTEGER));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(1).toIntegerWord().getInteger(), is(7));
     }
     
         @Test
@@ -255,11 +255,11 @@ public class ParserTest {
         Node result = parse("5 != 7");
 
         assertThat(result.getChildren().get(0).type(), is(NodeType.PROCCALL));
-        assertThat(result.getChildren().get(0).toProcedureCall().getName(), is("notequal?"));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).type(), is(NodeType.INTEGER));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).toIntegerWord().getInteger(), is(5));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(1).type(), is(NodeType.INTEGER));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(1).toIntegerWord().getInteger(), is(7));
+        assertThat(result.getChildren().get(0).toCall().name(), is("notequal?"));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).type(), is(NodeType.INTEGER));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).toIntegerWord().getInteger(), is(5));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(1).type(), is(NodeType.INTEGER));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(1).toIntegerWord().getInteger(), is(7));
     }
 
     @Test
@@ -267,17 +267,17 @@ public class ParserTest {
         Node result = parse("rt 100 * 2");
 
         assertThat(result.getChildren().get(0).type(), is(NodeType.PROCCALL));
-        assertThat(result.getChildren().get(0).toProcedureCall().getName(), is("rt"));
+        assertThat(result.getChildren().get(0).toCall().name(), is("rt"));
         assertThat(result.getChildren().get(0).getChildren().size(), is(1));
 
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).type(), is(NodeType.PROCCALL));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().size(), is(2));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).type(), is(NodeType.PROCCALL));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().size(), is(2));
 
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).toProcedureCall().getName(), is("mul"));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().get(0).type(), is(NodeType.INTEGER));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().get(0).toIntegerWord().getInteger(), is(100));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().get(1).type(), is(NodeType.INTEGER));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().get(1).toIntegerWord().getInteger(), is(2));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).toCall().name(), is("mul"));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(0).type(), is(NodeType.INTEGER));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(0).toIntegerWord().getInteger(), is(100));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(1).type(), is(NodeType.INTEGER));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(1).toIntegerWord().getInteger(), is(2));
     }
     
     @Test
@@ -285,16 +285,16 @@ public class ParserTest {
         Node result = parse("print [One Two]");
 
         assertThat(result.getChildren().get(0).type(), is(NodeType.PROCCALL));
-        assertThat(result.getChildren().get(0).toProcedureCall().getName(), is("print"));
+        assertThat(result.getChildren().get(0).toCall().name(), is("print"));
         assertThat(result.getChildren().get(0).getChildren().size(), is(1));
 
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).type(), is(NodeType.LIST));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().size(), is(2));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).type(), is(NodeType.LIST));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().size(), is(2));
 
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().get(0).type(), is(NodeType.SYMBOL));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().get(0).toSymbolWord().getSymbol(), is("One"));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().get(1).type(), is(NodeType.SYMBOL));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().get(1).toSymbolWord().getSymbol(), is("Two"));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(0).type(), is(NodeType.SYMBOL));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(0).toSymbolWord().getSymbol(), is("One"));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(1).type(), is(NodeType.SYMBOL));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(1).toSymbolWord().getSymbol(), is("Two"));
     }
 
     @Test
@@ -352,16 +352,16 @@ public class ParserTest {
         assertThat(result.getChildren().size(), is(2));
         assertThat(result.getChildren().get(0).type(), is(NodeType.PROCCALL));
 
-        assertThat(result.getChildren().get(0).toProcedureCall().getName(), is("print"));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().size(), is(1));
+        assertThat(result.getChildren().get(0).toCall().name(), is("print"));
+        assertThat(result.getChildren().get(0).toCall().getChildren().size(), is(1));
 
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).type(), is(NodeType.LIST));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).toList().getChildren().size(), is(2));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).type(), is(NodeType.LIST));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).toList().getChildren().size(), is(2));
 
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().get(0).type(), is(NodeType.SYMBOL));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().get(0).toSymbolWord().getSymbol(), is("Hello"));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().get(1).type(), is(NodeType.SYMBOL));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().get(1).toSymbolWord().getSymbol(), is("World"));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(0).type(), is(NodeType.SYMBOL));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(0).toSymbolWord().getSymbol(), is("Hello"));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(1).type(), is(NodeType.SYMBOL));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(1).toSymbolWord().getSymbol(), is("World"));
 
         assertThat(result.getChildren().get(1).type(), is(NodeType.PROCCALL));
     }
@@ -388,16 +388,16 @@ public class ParserTest {
         assertThat(result.getChildren().size(), is(2));
         assertThat(result.getChildren().get(0).type(), is(NodeType.PROCCALL));
 
-        assertThat(result.getChildren().get(0).toProcedureCall().getName(), is("print"));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().size(), is(1));
+        assertThat(result.getChildren().get(0).toCall().name(), is("print"));
+        assertThat(result.getChildren().get(0).toCall().getChildren().size(), is(1));
 
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).type(), is(NodeType.LIST));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).toList().getChildren().size(), is(2));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).type(), is(NodeType.LIST));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).toList().getChildren().size(), is(2));
 
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().get(0).type(), is(NodeType.SYMBOL));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().get(0).toSymbolWord().getSymbol(), is("Hello"));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().get(1).type(), is(NodeType.SYMBOL));
-        assertThat(result.getChildren().get(0).toProcedureCall().getChildren().get(0).getChildren().get(1).toSymbolWord().getSymbol(), is("World"));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(0).type(), is(NodeType.SYMBOL));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(0).toSymbolWord().getSymbol(), is("Hello"));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(1).type(), is(NodeType.SYMBOL));
+        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(1).toSymbolWord().getSymbol(), is("World"));
 
         assertThat(result.getChildren().get(1).type(), is(NodeType.PROCCALL));
     }
@@ -432,7 +432,7 @@ public class ParserTest {
         Node result = parse(list);
 
         assertThat(result.getChildren().get(0).type(), is(NodeType.PROCCALL));
-        assertThat(result.getChildren().get(0).toProcedureCall().getName(), is("add"));
+        assertThat(result.getChildren().get(0).toCall().name(), is("add"));
 //        assertThat(result.getChildren().get(0).toList().getChildren().size(), is(8));
     }
     
