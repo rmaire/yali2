@@ -34,6 +34,7 @@ import ch.uprisesoft.yali.runtime.procedures.builtin.Data;
 import ch.uprisesoft.yali.runtime.procedures.builtin.IO;
 import ch.uprisesoft.yali.runtime.procedures.builtin.Logic;
 import ch.uprisesoft.yali.runtime.procedures.builtin.Template;
+import ch.uprisesoft.yali.scope.Environment;
 import ch.uprisesoft.yali.scope.Scope;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,12 +55,9 @@ public class Interpreter implements OutputObserver {
     private Map<String, Procedure> functions = new HashMap<>();
 
     // Call stack
-    private List<Scope> scopeStack = new ArrayList<>();
     private List<Procedure> callStack = new ArrayList<>();
-
-    {
-        scopeStack.add(new Scope("global"));
-    }
+    
+    private Environment env = new Environment();
 
     /**
      * Interpreting functionality
@@ -95,58 +93,52 @@ public class Interpreter implements OutputObserver {
     /**
      * Variable management
      */
-    public void defineVar(String name, Node value) {
-
-        for (int i = scopeStack.size() - 1; i >= 0; i--) {
-            if (scopeStack.get(i).defined(name)) {
-                logger.debug("(Scope) defining variable " + name + " in scope " + scopeStack.get(i).getScopeName());
-                scopeStack.get(i).define(name.toLowerCase(), value);
-                return;
-            }
-        }
-
-        logger.debug("(Scope) defining variable " + name + " in scope " + scopeStack.get(0).getScopeName());
-        scopeStack.get(0).define(name.toLowerCase(), value);
-    }
-
-    public void localVar(String name) {
-        logger.debug("(Scope) Reserve local variable " + name + " in scope " + scope().getScopeName());
-        scope().local(name.toLowerCase());
-    }
+//    public void defineVar(String name, Node value) {
+//
+//        for (int i = scopeStack.size() - 1; i >= 0; i--) {
+//            if (scopeStack.get(i).defined(name)) {
+//                logger.debug("(Scope) defining variable " + name + " in scope " + scopeStack.get(i).getScopeName());
+//                scopeStack.get(i).define(name.toLowerCase(), value);
+//                return;
+//            }
+//        }
+//
+//        logger.debug("(Scope) defining variable " + name + " in scope " + scopeStack.get(0).getScopeName());
+//        scopeStack.get(0).define(name.toLowerCase(), value);
+//    }
+//
+//    public void localVar(String name) {
+//        logger.debug("(Scope) Reserve local variable " + name + " in scope " + scope().getScopeName());
+//        scope().local(name.toLowerCase());
+//    }
 
     public Scope scope() {
-        return scopeStack.get(scopeStack.size() - 1);
+        return env.peek();
     }
 
     public void scope(String name) {
         Scope newScope = new Scope(name);
-        scopeStack.add(newScope);
+        env.push(newScope);
     }
 
     public void unscope() {
-        scopeStack.remove(scopeStack.size() - 1);
+        env.pop();
     }
 
     public Node resolve(String name) {
-
-        for (int i = scopeStack.size() - 1; i >= 0; i--) {
-            if (scopeStack.get(i).defined(name)) {
-                return scopeStack.get(i).resolve(name);
-            }
-        }
-
-        return Node.none();
+        return env.resolve(name);
     }
 
     public Boolean resolveable(String name) {
-
-        for (int i = scopeStack.size() - 1; i >= 0; i--) {
-            if (scopeStack.get(i).defined(name)) {
-                return true;
-            }
-        }
-
-        return false;
+        return env.resolveable(name);
+    }
+    
+    public void defineVar(String name, Node value) {
+        env.defineVar(name, value);
+    }
+    
+    public void localVar(String name) {
+        env.localVar(name);
     }
 
     public java.util.List<String> stringify(Node arg) {
@@ -186,9 +178,9 @@ public class Interpreter implements OutputObserver {
         callStack.add(procedure);
 
         // TODO check last function call for recursion
-        if (checkIfRecursiveCall(call.name())) {
-            removeRecursion(call.name());
-        }
+//        if (checkIfRecursiveCall(call.name())) {
+//            removeRecursion(call.name());
+//        }
 
         Node result = Node.nil();
 
@@ -236,51 +228,51 @@ public class Interpreter implements OutputObserver {
         return result;
     }
 
-    private boolean checkIfRecursiveCall(String name) {
+//    private boolean checkIfRecursiveCall(String name) {
+//
+//        if (scopeStack.size() < 2) {
+//            return false;
+//        }
+//        if (callStack.size() < 2) {
+//            return false;
+//        }
+//
+//        for (int i = scopeStack.size() - 2; i >= 0; i--) {
+//            if (scopeStack.get(i).getScopeName().equals(name)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
-        if (scopeStack.size() < 2) {
-            return false;
-        }
-        if (callStack.size() < 2) {
-            return false;
-        }
-
-        for (int i = scopeStack.size() - 2; i >= 0; i--) {
-            if (scopeStack.get(i).getScopeName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void removeRecursion(String name) {
-        Scope actualScope = scopeStack.get(scopeStack.size() - 1);
-        Procedure actualCall = callStack.get(callStack.size() - 1);
-
-        // Remove scopes
-        // First one needs to be removed anyway
-        scopeStack.remove(scopeStack.size() - 1);
-        for (int i = scopeStack.size() - 1; i >= 0; i--) {
-            if (scopeStack.get(i).getScopeName().equals(name)) {
-                scopeStack.add(actualScope);
-                break;
-            } else {
-                scopeStack.remove(i);
-            }
-        }
-
-        // Remove calls
-        // First one needs to be removed anyway
-        callStack.remove(callStack.size() - 1);
-        for (int i = callStack.size() - 1; i >= 0; i--) {
-            if (callStack.get(i).getName().equals(name)) {
-                callStack.add(actualCall);
-                break;
-            } else {
-                callStack.remove(i);
-            }
-        }
-    }
+//    private void removeRecursion(String name) {
+//        Scope actualScope = scopeStack.get(scopeStack.size() - 1);
+//        Procedure actualCall = callStack.get(callStack.size() - 1);
+//
+//        // Remove scopes
+//        // First one needs to be removed anyway
+//        scopeStack.remove(scopeStack.size() - 1);
+//        for (int i = scopeStack.size() - 1; i >= 0; i--) {
+//            if (scopeStack.get(i).getScopeName().equals(name)) {
+//                scopeStack.add(actualScope);
+//                break;
+//            } else {
+//                scopeStack.remove(i);
+//            }
+//        }
+//
+//        // Remove calls
+//        // First one needs to be removed anyway
+//        callStack.remove(callStack.size() - 1);
+//        for (int i = callStack.size() - 1; i >= 0; i--) {
+//            if (callStack.get(i).getName().equals(name)) {
+//                callStack.add(actualCall);
+//                break;
+//            } else {
+//                callStack.remove(i);
+//            }
+//        }
+//    }
 
     /**
      * Procedure management functionality
