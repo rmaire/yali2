@@ -15,6 +15,7 @@
  */
 package ch.uprisesoft.yali.runtime.interpreter;
 
+import ch.uprisesoft.yali.ast.node.Call;
 import ch.uprisesoft.yali.lexer.Lexer;
 import ch.uprisesoft.yali.ast.node.Node;
 import ch.uprisesoft.yali.exception.NodeTypeException;
@@ -51,7 +52,6 @@ public class Interpreter implements OutputObserver {
 
     // Function definitions
     private Map<String, Procedure> functions = new HashMap<>();
-//    private Map<String, Integer> arities = new HashMap<>();
 
     // Call stack
     private List<Scope> scopeStack = new ArrayList<>();
@@ -170,22 +170,22 @@ public class Interpreter implements OutputObserver {
         }
         return stringifiedArgs;
     }
+    
+        public Node apply(Call call, java.util.List<Node> args) {
 
-    public Node apply(String name, java.util.List<Node> args) {
+        logger.debug("(FunctionDispatcher) dispatch function " + call.name() + " with scope " + scope().getScopeName());
 
-        logger.debug("(FunctionDispatcher) dispatch function " + name + " with scope " + scope().getScopeName());
+//        if (!functions.containsKey(name)) {
+//            throw new FunctionNotFoundException(name);
+//        }
 
-        if (!functions.containsKey(name)) {
-            throw new FunctionNotFoundException(name);
-        }
-
-        Procedure procedure = functions.get(name);
+        Procedure procedure = functions.get(call.name());
 
         callStack.add(procedure);
 
         // TODO check last function call for recursion
-        if (checkIfRecursiveCall(name)) {
-            removeRecursion(name);
+        if (checkIfRecursiveCall(call.name())) {
+            removeRecursion(call.name());
         }
 
         Node result = Node.nil();
@@ -201,7 +201,6 @@ public class Interpreter implements OutputObserver {
 
             result = procedure.getNativeCall().apply(scope(), args);
 
-//            result = procedure.getNativeCall().apply(scope(), args);
         } else {
             logger.debug("(FunctionDispatcher) non-native function");
 
@@ -235,6 +234,70 @@ public class Interpreter implements OutputObserver {
 
         return result;
     }
+
+//    public Node apply(String name, java.util.List<Node> args) {
+//
+//        logger.debug("(FunctionDispatcher) dispatch function " + name + " with scope " + scope().getScopeName());
+//
+//        if (!functions.containsKey(name)) {
+//            throw new FunctionNotFoundException(name);
+//        }
+//
+//        Procedure procedure = functions.get(name);
+//
+//        callStack.add(procedure);
+//
+//        // TODO check last function call for recursion
+//        if (checkIfRecursiveCall(name)) {
+//            removeRecursion(name);
+//        }
+//
+//        Node result = Node.nil();
+//
+//        if (!procedure.isMacro()) {
+//            scope(procedure.getName());
+//        }
+//
+//        // TODO differentiate from macros
+//        if (procedure.isNative() || procedure.isMacro()) {
+//
+//            logger.debug("(FunctionDispatcher) native function");
+//
+//            result = procedure.getNativeCall().apply(scope(), args);
+//
+//        } else {
+//            logger.debug("(FunctionDispatcher) non-native function");
+//
+//            TreeWalkEvaluator evaluator = new TreeWalkEvaluator(this);
+//
+//            for (Node line : procedure.getChildren()) {
+//
+//                // every direct child should be a function call
+//                if (!line.type().equals(NodeType.PROCCALL)) {
+//                    throw new NodeTypeException(line, line.type(), NodeType.PROCCALL);
+//                }
+//
+//                // Check if function call is output or stop. If yes, no further
+//                // lines will be evaluated
+//                if (line.toCall().name().equals("output") || line.toCall().name().equals("stop")) {
+//                    logger.debug("(FunctionDispatcher) function " + procedure.getName() + " is cancelled.");
+//                    break;
+//                }
+//
+//                line.accept(evaluator);
+//                result = evaluator.getResult();
+//            }
+//        }
+//
+//        if (!procedure.isMacro()) {
+//            unscope();
+//        }
+//
+//        callStack.remove(callStack.size() - 1);
+////        callStack.remove(procedure);
+//
+//        return result;
+//    }
 
     private boolean checkIfRecursiveCall(String name) {
 
@@ -294,10 +357,6 @@ public class Interpreter implements OutputObserver {
         return functions.containsKey(name);
     }
 
-//    public Map<String, Integer> getArities() {
-//        return arities;
-//    }
-
     public Map<String, Procedure> getProcedures() {
         return functions;
     }
@@ -308,7 +367,6 @@ public class Interpreter implements OutputObserver {
         }
 
         functions.put(alias, functions.get(original));
-//        arities.put(alias, functions.get(original).getArity());
     }
 
     public Interpreter loadStdLib(Interpreter it, OutputObserver oo) {

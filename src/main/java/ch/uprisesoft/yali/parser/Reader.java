@@ -31,6 +31,7 @@ import ch.uprisesoft.yali.ast.node.NodeType;
 import ch.uprisesoft.yali.ast.node.word.IntegerWord;
 import ch.uprisesoft.yali.exception.TokenTypeException;
 import ch.uprisesoft.yali.runtime.interpreter.Interpreter;
+import ch.uprisesoft.yali.runtime.procedures.FunctionNotFoundException;
 import org.ainslec.picocog.PicoWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -207,6 +208,10 @@ public class Reader {
         Node node = Node.none();
 
         if (current().type().equals(TokenType.SYMBOL) && functions.getProcedures().containsKey(current().getLexeme().toLowerCase())) {
+
+            if (!functions.getProcedures().containsKey(current().getLexeme().toLowerCase())) {
+                throw new FunctionNotFoundException(current().getLexeme().toLowerCase());
+            }
 
             pw.writeln("Funcall start: " + current().getLexeme());
             pw.indentRight();

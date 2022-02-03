@@ -135,7 +135,7 @@ public class TreeWalkEvaluator implements Evaluator {
         }
 
         logger.debug("(eval) dispatching " + funCall.name());
-        result = it.apply(funCall.name(), args);
+        result = it.apply(funCall, args);
         logger.debug("(eval) Function Call " + funCall.name() + " end");
         
     }
