@@ -22,6 +22,7 @@ import ch.uprisesoft.yali.helper.ObjectMother;
 import ch.uprisesoft.yali.lexer.Lexer;
 import ch.uprisesoft.yali.parser.Reader;
 import ch.uprisesoft.yali.runtime.interpreter.Interpreter;
+import ch.uprisesoft.yali.runtime.io.InputGenerator;
 import ch.uprisesoft.yali.runtime.io.OutputObserver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,7 @@ public class LogicTest {
     private Reader p;
     private Interpreter i;
     private OutputObserver o;
+    private InputGenerator ig;
     
     public LogicTest() {
         ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
@@ -56,7 +58,19 @@ public class LogicTest {
             }
         };
         
-        ObjectMother om = new ObjectMother(o);
+        ig = new InputGenerator() {
+            @Override
+            public String request() {
+                return "requestedinput";
+            }
+
+            @Override
+            public String requestLine() {
+                return "requestedinputline";
+            }
+        };
+        
+        ObjectMother om = new ObjectMother(o, ig);
         
         l = om.getLexer();
         p = om.getParser();

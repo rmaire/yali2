@@ -43,9 +43,9 @@ public class InterpreterBuilder {
         Interpreter it = new Interpreter();
 
         if (oo != null && ig != null) {
-            it.loadStdLib(it, oo, ig);
+            it.loadStdLib(oo, ig);
         } else if (oo != null && ig == null) {
-            it.loadStdLib(it, oo);
+            it.loadStdLib();
         }
 
         return it;

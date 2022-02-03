@@ -65,7 +65,7 @@ public class Repl implements InputGenerator, OutputObserver {
 //        Scope rootScope = new Scope("root");
         interpreter = new InterpreterBuilder().build();
 //        interpreter = new Interpreter(fd, rootScope);
-        interpreter.loadStdLib(interpreter, this, this);
+        interpreter.loadStdLib(this, this);
 
     }
 

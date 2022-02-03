@@ -369,36 +369,36 @@ public class Interpreter implements OutputObserver {
         functions.put(alias, functions.get(original));
     }
 
-    public Interpreter loadStdLib(Interpreter it, OutputObserver oo) {
+    public Interpreter loadStdLib() {
 
         logger.debug("Loading StdLib");
 
         Logic logic = new Logic();
-        logic.registerProcedures(it);
+        logic.registerProcedures(this);
 
         Control control = new Control();
-        control.registerProcedures(it);
+        control.registerProcedures(this);
 
         Arithmetic arithmetic = new Arithmetic();
-        arithmetic.registerProcedures(it);
+        arithmetic.registerProcedures(this);
 
         Template template = new Template();
-        template.registerProcedures(it);
+        template.registerProcedures(this);
 
         Data data = new Data();
-        data.registerProcedures(it);
+        data.registerProcedures(this);
 
-        return it;
+        return this;
     }
 
-    public Interpreter loadStdLib(Interpreter it, OutputObserver oo, InputGenerator ig) {
+    public Interpreter loadStdLib(OutputObserver oo, InputGenerator ig) {
         logger.debug("Loading StdLib with IO");
         IO com = new IO();
         com.register(oo);
         com.register(ig);
-        com.registerProcedures(it);
+        com.registerProcedures(this);
 
-        return loadStdLib(it, oo);
+        return loadStdLib();
     }
 
     /**

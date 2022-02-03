@@ -25,21 +25,10 @@ public class ObjectMother {
     private Interpreter i;
     private Reader p;
     private Lexer l;
-    
-    public ObjectMother(OutputObserver o) {
-        
-        this.i = new InterpreterBuilder().build();
-        this.p = new Reader(i);
-        this.l = new Lexer();
-        this.i.loadStdLib(i, o);
-        
-        MockTurtleManager mtm = new MockTurtleManager();
-        mtm.registerProcedures(i);
-    }
-    
+   
     public ObjectMother(OutputObserver oo, InputGenerator ig) {
         this.i = new InterpreterBuilder().build();
-        this.i.loadStdLib(i, oo, ig);
+        this.i.loadStdLib(oo, ig);
         
         MockTurtleManager mtm = new MockTurtleManager();
         mtm.registerProcedures(i);
@@ -72,7 +61,7 @@ public class ObjectMother {
         };
         
         this.i = new InterpreterBuilder().build();
-        this.i.loadStdLib(i, oo, ig);
+        this.i.loadStdLib(oo, ig);
         
         MockTurtleManager mtm = new MockTurtleManager();
         mtm.registerProcedures(i);
