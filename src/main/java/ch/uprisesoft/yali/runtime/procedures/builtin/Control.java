@@ -82,7 +82,7 @@ public class Control implements ProcedureProvider {
         
         logger.debug("(Control) defining variable " + name + " in scope " + workScope.getScopeName());
 
-        it.localVar(name);
+        it.local(name);
 
         return Node.nil();
     }
@@ -106,7 +106,7 @@ public class Control implements ProcedureProvider {
         logger.debug("(Control) defining variable " + name + " in scope " + workScope.getScopeName());
 
         newVar = args.get(1);
-        it.defineVar(name, newVar);
+        it.make(name, newVar);
 
         return newVar;
     }
@@ -130,8 +130,8 @@ public class Control implements ProcedureProvider {
         logger.debug("(Control) defining variable " + name + " in scope " + workScope.getScopeName());
 
         newVar = args.get(1);
-        it.localVar(name);
-        it.defineVar(name, newVar);
+        it.local(name);
+        it.make(name, newVar);
 
         return newVar;
     }
@@ -258,17 +258,17 @@ public class Control implements ProcedureProvider {
     public Interpreter registerProcedures(Interpreter interpreter) {
         this.it = interpreter;
 
-        it.defineProc(new Procedure("alias", (scope, val) -> this.alias(scope, val), "original", "alias"));
-        it.defineProc(new Procedure("thing", (scope, val) -> this.thing(scope, val), "name"));
-        it.defineProc(new Procedure("make", (scope, val) -> this.make(scope, val), "name", "value").macro());
-        it.defineProc(new Procedure("local", (scope, val) -> this.local(scope, val), "name").macro());
-        it.defineProc(new Procedure("localmake", (scope, val) -> this.localmake(scope, val), "name", "value").macro());
-        it.defineProc(new Procedure("repeat", (scope, val) -> this.repeat(scope, val), "control", "block").macro());
-        it.defineProc(new Procedure("run", (scope, val) -> this.run(scope, val), "block").macro());
-        it.defineProc(new Procedure("output", (scope, val) -> this.output(scope, val), "block"));
-        it.defineProc(new Procedure("stop", (scope, val) -> this.output(scope, val)));
-        it.defineProc(new Procedure("ifelse", (scope, val) -> this.ifelseexpr(scope, val), "condition", "iftrue", "iffalse").macro());
-        it.defineProc(new Procedure("if",(scope, val) -> this.ifexpr(scope, val),  "condition", "iftrue").macro());
+        it.define(new Procedure("alias", (scope, val) -> this.alias(scope, val), "original", "alias"));
+        it.define(new Procedure("thing", (scope, val) -> this.thing(scope, val), "name"));
+        it.define(new Procedure("make", (scope, val) -> this.make(scope, val), "name", "value").macro());
+        it.define(new Procedure("local", (scope, val) -> this.local(scope, val), "name").macro());
+        it.define(new Procedure("localmake", (scope, val) -> this.localmake(scope, val), "name", "value").macro());
+        it.define(new Procedure("repeat", (scope, val) -> this.repeat(scope, val), "control", "block").macro());
+        it.define(new Procedure("run", (scope, val) -> this.run(scope, val), "block").macro());
+        it.define(new Procedure("output", (scope, val) -> this.output(scope, val), "block"));
+        it.define(new Procedure("stop", (scope, val) -> this.output(scope, val)));
+        it.define(new Procedure("ifelse", (scope, val) -> this.ifelseexpr(scope, val), "condition", "iftrue", "iffalse").macro());
+        it.define(new Procedure("if",(scope, val) -> this.ifexpr(scope, val),  "condition", "iftrue").macro());
 
         return it;
     }

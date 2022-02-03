@@ -41,7 +41,7 @@ public class Environment {
         return ret;
     }
 
-    public void defineVar(String name, Node value) {
+    public void make(String name, Node value) {
 
         for (int i = scopeStack.size() - 1; i >= 0; i--) {
             if (scopeStack.get(i).defined(name)) {
@@ -55,7 +55,7 @@ public class Environment {
         scopeStack.get(0).define(name.toLowerCase(), value);
     }
 
-    public void localVar(String name) {
+    public void local(String name) {
         logger.debug("(Scope) Reserve local variable " + name + " in scope " + peek().getScopeName());
         peek().local(name.toLowerCase());
     }

@@ -96,7 +96,7 @@ public class Reader {
                 advance();
 
                 fun.setPosInSource(defStartToken.getLine(), defStartToken.getPos());
-                functions.defineProc(fun);
+                functions.define(fun);
 
                 pw.indentRight();
                 pw.writeln(fun.header());
@@ -190,7 +190,7 @@ public class Reader {
 
             match(TokenType.NEWLINE);
 
-            functions.defineProc(fun);
+            functions.define(fun);
 
             pw.indentLeft();
             pw.writeln("Fundef Body end: " + fun.getName());

@@ -125,7 +125,7 @@ public class TreeWalkEvaluator implements Evaluator {
         for (Node c : call.getChildren()) {
             c.accept(this);
             if (i < funDef.getArity()) {
-                it.defineVar(
+                it.make(
                         funDef.getArgs().get(i),
                         result
                 );

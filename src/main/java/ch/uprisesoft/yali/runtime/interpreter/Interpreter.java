@@ -93,7 +93,7 @@ public class Interpreter implements OutputObserver {
     /**
      * Variable management
      */
-//    public void defineVar(String name, Node value) {
+//    public void make(String name, Node value) {
 //
 //        for (int i = scopeStack.size() - 1; i >= 0; i--) {
 //            if (scopeStack.get(i).defined(name)) {
@@ -107,7 +107,7 @@ public class Interpreter implements OutputObserver {
 //        scopeStack.get(0).define(name.toLowerCase(), value);
 //    }
 //
-//    public void localVar(String name) {
+//    public void local(String name) {
 //        logger.debug("(Scope) Reserve local variable " + name + " in scope " + scope().getScopeName());
 //        scope().local(name.toLowerCase());
 //    }
@@ -133,12 +133,12 @@ public class Interpreter implements OutputObserver {
         return env.resolveable(name);
     }
     
-    public void defineVar(String name, Node value) {
-        env.defineVar(name, value);
+    public void make(String name, Node value) {
+        env.make(name, value);
     }
     
-    public void localVar(String name) {
-        env.localVar(name);
+    public void local(String name) {
+        env.local(name);
     }
 
     public java.util.List<String> stringify(Node arg) {
@@ -277,7 +277,7 @@ public class Interpreter implements OutputObserver {
     /**
      * Procedure management functionality
      */
-    public void defineProc(Procedure function) {
+    public void define(Procedure function) {
         functions.put(function.getName(), function);
 //        arities.put(function.getName(), function.getArity());
     }
