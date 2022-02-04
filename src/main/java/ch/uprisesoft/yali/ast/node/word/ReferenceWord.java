@@ -15,8 +15,9 @@
  */
 package ch.uprisesoft.yali.ast.node.word;
 
+import ch.uprisesoft.yali.ast.node.Node;
 import ch.uprisesoft.yali.ast.node.NodeType;
-import ch.uprisesoft.yali.eval.Evaluator;
+import ch.uprisesoft.yali.scope.Environment;
 
 /**
  *
@@ -28,10 +29,10 @@ public class ReferenceWord extends Word {
         super(NodeType.REFERENCE);
         this.referenceWord = reference;
     }
-
+    
     @Override
-    public void accept(Evaluator evaluator) {
-        evaluator.evaluate(this.toReferenceWord());
+    public Node evaluate(Environment env){
+        return env.resolve(this.toReferenceWord().getReference());
     }
 
     @Override

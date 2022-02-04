@@ -9,7 +9,6 @@ import ch.uprisesoft.yali.ast.node.Call;
 import ch.uprisesoft.yali.ast.node.Node;
 import ch.uprisesoft.yali.ast.node.NodeType;
 import ch.uprisesoft.yali.ast.node.Procedure;
-import ch.uprisesoft.yali.eval.TreeWalkEvaluator;
 import ch.uprisesoft.yali.exception.NodeTypeException;
 import ch.uprisesoft.yali.runtime.procedures.FunctionNotFoundException;
 import java.util.ArrayList;
@@ -75,7 +74,7 @@ public class Environment {
     }
 
     public Node apply(Call call) {
-
+        
         logger.debug("(FunctionDispatcher) dispatch function " + call.name() + " with scope " + peek().getScopeName());
 
         if (!procedures.containsKey(call.name())) {
@@ -104,7 +103,7 @@ public class Environment {
         } else {
             logger.debug("(FunctionDispatcher) non-native function");
 
-            TreeWalkEvaluator evaluator = new TreeWalkEvaluator(this);
+//            TreeWalkEvaluator evaluator = new TreeWalkEvaluator(this);
 
             for (Node line : procedure.getChildren()) {
 
@@ -120,8 +119,8 @@ public class Environment {
                     break;
                 }
 
-                line.accept(evaluator);
-                result = evaluator.getResult();
+//                line.accept(evaluator);
+                result = line.evaluate(this);
             }
         }
         

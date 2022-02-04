@@ -15,8 +15,9 @@
  */
 package ch.uprisesoft.yali.ast.node.word;
 
+import ch.uprisesoft.yali.ast.node.Node;
 import ch.uprisesoft.yali.ast.node.NodeType;
-import ch.uprisesoft.yali.eval.Evaluator;
+import ch.uprisesoft.yali.scope.Environment;
 
 /**
  *
@@ -31,10 +32,10 @@ public class NoWord extends Word {
         this.floatWord = null;
         this.integerWord = null;
     }
-
+    
     @Override
-    public void accept(Evaluator evaluator) {
-        evaluator.evaluate(this.toNoWord());
+    public Node evaluate(Environment env){
+        return this;
     }
 
     @Override

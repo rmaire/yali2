@@ -21,8 +21,6 @@ import ch.uprisesoft.yali.ast.node.Node;
 import ch.uprisesoft.yali.exception.NodeTypeException;
 import ch.uprisesoft.yali.ast.node.NodeType;
 import ch.uprisesoft.yali.ast.node.Procedure;
-import ch.uprisesoft.yali.eval.PrettyPrinter;
-import ch.uprisesoft.yali.eval.TreeWalkEvaluator;
 import ch.uprisesoft.yali.lexer.Token;
 import ch.uprisesoft.yali.parser.Reader;
 import ch.uprisesoft.yali.runtime.io.InputGenerator;
@@ -68,14 +66,15 @@ public class Interpreter implements OutputObserver {
 
     public Node eval(Node node) {
 
-        TreeWalkEvaluator eval = new TreeWalkEvaluator(env);
+//        TreeWalkEvaluator eval = new TreeWalkEvaluator(env);
+        Node res = Node.none();
         try {
-            node.accept(eval);
+            res = node.evaluate(env);
         } catch (StackOverflowError soe) {
-            node.accept(eval);
+            res = node.evaluate(env);
         }
 
-        return eval.getResult();
+        return res;
     }
 
     public Node read(String source) {
@@ -152,17 +151,17 @@ public class Interpreter implements OutputObserver {
         logger.debug("(Interpreter) " + output);
     }
 
-    public String pretty(String source) {
-        PrettyPrinter pp = new PrettyPrinter();
-        java.util.List<Token> tokens = new Lexer().scan(source);
-        Node node = new Reader(this).read(tokens);
-        for (Node expression : node.getChildren()) {
-            if (expression.type().equals(NodeType.PROCCALL)) {
-                pp.evaluate(expression.toCall());
-            } else {
-                throw new NodeTypeException(expression, expression.type(), NodeType.PROCCALL);
-            }
-        }
-        return pp.build();
-    }
+//    public String pretty(String source) {
+//        PrettyPrinter pp = new PrettyPrinter();
+//        java.util.List<Token> tokens = new Lexer().scan(source);
+//        Node node = new Reader(this).read(tokens);
+//        for (Node expression : node.getChildren()) {
+//            if (expression.type().equals(NodeType.PROCCALL)) {
+//                pp.evaluate(expression.toCall());
+//            } else {
+//                throw new NodeTypeException(expression, expression.type(), NodeType.PROCCALL);
+//            }
+//        }
+//        return pp.build();
+//    }
 }

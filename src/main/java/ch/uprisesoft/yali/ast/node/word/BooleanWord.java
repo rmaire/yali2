@@ -15,8 +15,9 @@
  */
 package ch.uprisesoft.yali.ast.node.word;
 
+import ch.uprisesoft.yali.ast.node.Node;
 import ch.uprisesoft.yali.ast.node.NodeType;
-import ch.uprisesoft.yali.eval.Evaluator;
+import ch.uprisesoft.yali.scope.Environment;
 
 
 public class BooleanWord extends Word {
@@ -34,10 +35,10 @@ public class BooleanWord extends Word {
         }
 
     }
-
+    
     @Override
-    public void accept(Evaluator evaluator) {
-        evaluator.evaluate(this.toBooleanWord());
+    public Node evaluate(Environment env){
+        return this;
     }
 
     @Override

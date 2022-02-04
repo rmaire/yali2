@@ -24,8 +24,8 @@ import ch.uprisesoft.yali.ast.node.word.NoWord;
 import ch.uprisesoft.yali.ast.node.word.QuotedWord;
 import ch.uprisesoft.yali.ast.node.word.ReferenceWord;
 import ch.uprisesoft.yali.ast.node.word.SymbolWord;
-import ch.uprisesoft.yali.eval.Evaluator;
 import ch.uprisesoft.yali.lexer.Token;
+import ch.uprisesoft.yali.scope.Environment;
 import java.util.ArrayList;
 //import org.ainslec.picocog.PicoWriter;
 
@@ -82,8 +82,8 @@ public abstract class Node {
 
     @Override
     public abstract String toString();
-
-    public abstract void accept(Evaluator evaluator);
+    
+    public abstract Node evaluate(Environment env);
 
     public BooleanWord toBooleanWord() throws NodeTypeException {
         if (this.type() != NodeType.BOOLEAN) {

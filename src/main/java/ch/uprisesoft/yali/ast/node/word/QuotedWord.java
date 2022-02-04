@@ -15,8 +15,9 @@
  */
 package ch.uprisesoft.yali.ast.node.word;
 
+import ch.uprisesoft.yali.ast.node.Node;
 import ch.uprisesoft.yali.ast.node.NodeType;
-import ch.uprisesoft.yali.eval.Evaluator;
+import ch.uprisesoft.yali.scope.Environment;
 
 /**
  *
@@ -29,10 +30,10 @@ public class QuotedWord extends Word {
         
         this.quoteWord = quote.replace("\\ ", " ");
     }
-
+    
     @Override
-    public void accept(Evaluator evaluator) {
-        evaluator.evaluate(this.toQuotedWord());
+    public Node evaluate(Environment env){
+        return this;
     }
 
     @Override

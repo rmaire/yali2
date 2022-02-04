@@ -90,10 +90,7 @@ public class Repl implements InputGenerator, OutputObserver {
             
             String source = reader.readLine();
             
-            if (source.toLowerCase().startsWith("pretty")) {
-                System.out.println(interpreter.pretty(source.substring(7)));
-                continue;
-            } else if (source.toLowerCase().equals("bye")) {
+            if (source.toLowerCase().equals("bye")) {
                 break;
             } else if (source.toLowerCase().startsWith("edit")) {
                 

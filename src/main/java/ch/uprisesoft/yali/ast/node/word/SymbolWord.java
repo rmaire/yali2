@@ -15,8 +15,9 @@
  */
 package ch.uprisesoft.yali.ast.node.word;
 
+import ch.uprisesoft.yali.ast.node.Node;
 import ch.uprisesoft.yali.ast.node.NodeType;
-import ch.uprisesoft.yali.eval.Evaluator;
+import ch.uprisesoft.yali.scope.Environment;
 
 /**
  *
@@ -29,13 +30,11 @@ public class SymbolWord extends Word {
         this.symbolWord = string;
         
     }
-
-    @Override
-    public void accept(Evaluator evaluator) {
-        evaluator.evaluate(this.toSymbolWord());
-    }
-
     
+    @Override
+    public Node evaluate(Environment env){
+        return this;
+    }
     
     @Override
     public String toString() {

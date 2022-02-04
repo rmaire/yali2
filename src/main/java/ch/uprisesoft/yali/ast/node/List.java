@@ -15,7 +15,7 @@
  */
 package ch.uprisesoft.yali.ast.node;
 
-import ch.uprisesoft.yali.eval.Evaluator;
+import ch.uprisesoft.yali.scope.Environment;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
@@ -33,10 +33,10 @@ public class List extends Node {
         super(NodeType.LIST);
         super.addChildren(nodes);
     }
-
+    
     @Override
-    public void accept(Evaluator evaluator) {
-        evaluator.evaluate(this.toList());
+    public Node evaluate(Environment env){
+        return this;
     }
 
     public void reverse() {

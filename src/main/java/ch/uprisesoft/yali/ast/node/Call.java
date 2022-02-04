@@ -15,7 +15,8 @@
  */
 package ch.uprisesoft.yali.ast.node;
 
-import ch.uprisesoft.yali.eval.Evaluator;
+import ch.uprisesoft.yali.runtime.procedures.FunctionNotFoundException;
+import ch.uprisesoft.yali.scope.Environment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -89,10 +90,43 @@ public class Call extends Node {
     public Boolean isExtraCall() {
         return arity < 0;
     }
-
+    
     @Override
-    public void accept(Evaluator evaluator) {
-        evaluator.evaluate(this.toCall());
+    public Node evaluate(Environment env){
+        
+        if (!env.defined(this.name())) {
+            throw new FunctionNotFoundException(this.name());
+        }
+
+        Procedure funDef = env.getProcedures().get(this.name());
+
+        java.util.List<Node> args = new ArrayList<>();
+
+        // TODO differentiate between procedures and macros (called with parent scope)
+        int i = 0;
+        for (Node c : this.getChildren()) {
+            Node res = c.evaluate(env);
+            if (i < funDef.getArity()) {
+                env.make(
+                        funDef.getArgs().get(i),
+                        res
+                );
+                i++;
+            }
+            args.add(res);
+        }
+
+        this.args(args);
+
+        return env.apply(this);
+        
+//        result = it.schedule(call);
+//        it.schedule(call);
+//        while(it.tick()) {}
+//        result = it.result();
+        
+        
+//        return this;
     }
 
     @Override

@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TreeWalkEvaluatorTest {
 
-    TreeWalkEvaluator twe;
+//    TreeWalkEvaluator twe;
     Reader p;
     Lexer l;
 
@@ -44,58 +44,58 @@ public class TreeWalkEvaluatorTest {
         rootLogger.setLevel(Level.toLevel("off"));
     }
 
-    @BeforeEach
-    public void setUp() {
-        ObjectMother om = new ObjectMother();
-        l = om.getLexer();
-        p = om.getParser();
-        twe = new TreeWalkEvaluator(om.getInterpreter().env());
-    }
+//    @BeforeEach
+//    public void setUp() {
+//        ObjectMother om = new ObjectMother();
+//        l = om.getLexer();
+//        p = om.getParser();
+//        twe = new TreeWalkEvaluator(om.getInterpreter().env());
+//    }
 
     private Node parse(String input) {
         return p.read(l.scan(input)).getChildren().get(0);
     }
 
-    private Node eval(Node node) {
-        node.accept(twe);
-        return twe.getResult();
-    }
+//    private Node eval(Node node) {
+//        node.accept(twe);
+//        return twe.getResult();
+//    }
 
-    @Test
-    public void testBasicAddition() {
-        String input = "5 + 3.0";
-
-        Call node = (Call) parse(input);
-        Node result = eval(node);
-
-        assertThat(result.type(), is(NodeType.FLOAT));
-        assertThat(result.toFloatWord().getFloat(), is(8.0));
-
-    }
-
-    @Test
-    public void testMultipleAddition() {
-        String input = "5 + 3 + 2 + 5";
-
-        Call node = (Call) parse(input);
-        Node result = eval(node);
-
-        assertThat(result.type(), is(NodeType.INTEGER));
-        assertThat(result.toIntegerWord().getInteger(), is(15));
-
-    }
-
-    @Test
-    public void testDefinedFunction() {
-//        ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
-//        rootLogger.setLevel(Level.toLevel("debug"));
-
-        String input = "5 + 3 + 2.0 + 5";
-
-        Call node = (Call) parse(input);
-        Node result = eval(node);
-
-        assertThat(result.type(), is(NodeType.FLOAT));
-        assertThat(result.toFloatWord().getFloat(), is(15.0));
-    }
+//    @Test
+//    public void testBasicAddition() {
+//        String input = "5 + 3.0";
+//
+//        Call node = (Call) parse(input);
+//        Node result = eval(node);
+//
+//        assertThat(result.type(), is(NodeType.FLOAT));
+//        assertThat(result.toFloatWord().getFloat(), is(8.0));
+//
+//    }
+//
+//    @Test
+//    public void testMultipleAddition() {
+//        String input = "5 + 3 + 2 + 5";
+//
+//        Call node = (Call) parse(input);
+//        Node result = eval(node);
+//
+//        assertThat(result.type(), is(NodeType.INTEGER));
+//        assertThat(result.toIntegerWord().getInteger(), is(15));
+//
+//    }
+//
+//    @Test
+//    public void testDefinedFunction() {
+////        ch.qos.logback.classic.Logger rootLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME);
+////        rootLogger.setLevel(Level.toLevel("debug"));
+//
+//        String input = "5 + 3 + 2.0 + 5";
+//
+//        Call node = (Call) parse(input);
+//        Node result = eval(node);
+//
+//        assertThat(result.type(), is(NodeType.FLOAT));
+//        assertThat(result.toFloatWord().getFloat(), is(15.0));
+//    }
 }

@@ -15,8 +15,8 @@
  */
 package ch.uprisesoft.yali.ast.node;
 
-import ch.uprisesoft.yali.eval.Evaluator;
 import ch.uprisesoft.yali.runtime.procedures.FunctionType;
+import ch.uprisesoft.yali.scope.Environment;
 import ch.uprisesoft.yali.scope.Scope;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,10 +100,10 @@ public class Procedure extends Node {
     public void setSource(String source) {
         this.source = source;
     }
-
+    
     @Override
-    public void accept(Evaluator evaluator) {
-        evaluator.evaluate(this.toProcedureDef());
+    public Node evaluate(Environment env){
+        return this;
     }
 
     @Override
