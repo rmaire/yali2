@@ -30,33 +30,46 @@ public class Environment {
     private Map<String, Procedure> procedures = new HashMap<>();
     private List<Scope> scopeStack = new ArrayList<>();
     private List<Call> callStack = new ArrayList<>();
-    
+
     private Node lastResult = Node.none();
 
     {
         scopeStack.add(new Scope("global"));
     }
-    
+
     public void schedule(Call call) {
+
+        Procedure proc = procedures.get(call.name());
+        if (!proc.isMacro()) {
+            push(new Scope(call.name()));
+        }
+
         callStack.add(call);
     }
-    
+
     private void unschedule() {
-        callStack.remove(callStack.size()-1);
-    }
-    
-    public boolean tick() {
-    
-        if(callStack.isEmpty()) {
-            return false;
+        Call topCall = callStack.get(callStack.size() - 1);
+        Procedure proc = procedures.get(callStack.get(callStack.size() - 1).name());
+        
+        if (proc.isMacro()) {
+            pop();
         }
         
-        lastResult = apply(callStack.get(callStack.size()-1));
-        unschedule();
-        
+        callStack.remove(callStack.size() - 1);
+    }
+
+    public boolean tick() {
+        if (callStack.isEmpty()) {
+            return false;
+        }
+
+        lastResult = apply(callStack.get(callStack.size() - 1));
+
+        System.out.println("TICK!");
+        callStack.remove(callStack.size() - 1);
         return true;
     }
-    
+
     public Node result() {
         return lastResult;
     }
@@ -75,7 +88,7 @@ public class Environment {
 
         // TODO check last function call for recursion
         Node result = Node.nil();
-
+        
         if (!procedure.isMacro()) {
             Scope newScope = new Scope(procedure.getName());
             push(newScope);
@@ -111,12 +124,10 @@ public class Environment {
                 result = evaluator.getResult();
             }
         }
-
+        
         if (!procedure.isMacro()) {
             pop();
         }
-
-        callStack.remove(callStack.size() - 1);
 
         return result;
     }
