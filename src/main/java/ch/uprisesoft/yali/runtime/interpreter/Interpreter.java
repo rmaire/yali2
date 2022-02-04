@@ -50,12 +50,6 @@ import org.slf4j.LoggerFactory;
 public class Interpreter implements OutputObserver {
 
     private static final Logger logger = LoggerFactory.getLogger(Interpreter.class);
-
-    // Function definitions
-//    private Map<String, Procedure> procedures = new HashMap<>();
-
-    // Call stack
-//    private List<Procedure> callStack = new ArrayList<>();
     
     private Environment env = new Environment();
 
@@ -94,39 +88,6 @@ public class Interpreter implements OutputObserver {
         return env;
     }
 
-    /**
-     * Variable management
-     */
-
-//    public Scope scope() {
-//        return env.peek();
-//    }
-
-    public void scope(String name) {
-        Scope newScope = new Scope(name);
-        env.push(newScope);
-    }
-
-    public void unscope() {
-        env.pop();
-    }
-
-    public Node resolve(String name) {
-        return env.resolve(name);
-    }
-
-    public Boolean resolveable(String name) {
-        return env.resolveable(name);
-    }
-    
-//    public void make(String name, Node value) {
-//        env.make(name, value);
-//    }
-    
-//    public void local(String name) {
-//        env.local(name);
-//    }
-
     public java.util.List<String> stringify(Node arg) {
         java.util.List<String> stringifiedArgs = new ArrayList<>();
         if (arg.type().equals(NodeType.LIST)) {
@@ -150,136 +111,6 @@ public class Interpreter implements OutputObserver {
         }
         return stringifiedArgs;
     }
-
-//    public Node apply(Call call) {
-//
-//        logger.debug("(FunctionDispatcher) dispatch function " + call.name() + " with scope " + env().peek().getScopeName());
-//
-//        if (!procedures.containsKey(call.name())) {
-//            throw new FunctionNotFoundException(call.name());
-//        }
-//
-//        Procedure procedure = procedures.get(call.name());
-//
-//        callStack.add(procedure);
-//
-//        // TODO check last function call for recursion
-//
-//        Node result = Node.nil();
-//
-//        if (!procedure.isMacro()) {
-//            scope(procedure.getName());
-//        }
-//
-//        // TODO differentiate from macros
-//        if (procedure.isNative() || procedure.isMacro()) {
-//
-//            logger.debug("(FunctionDispatcher) native function");
-//
-//            result = procedure.getNativeCall().apply(env().peek(), call.args());
-//
-//        } else {
-//            logger.debug("(FunctionDispatcher) non-native function");
-//
-//            TreeWalkEvaluator evaluator = new TreeWalkEvaluator(this);
-//
-//            for (Node line : procedure.getChildren()) {
-//
-//                // every direct child should be a function call
-//                if (!line.type().equals(NodeType.PROCCALL)) {
-//                    throw new NodeTypeException(line, line.type(), NodeType.PROCCALL);
-//                }
-//
-//                // Check if function call is output or stop. If yes, no further
-//                // lines will be evaluated
-//                if (line.toCall().name().equals("output") || line.toCall().name().equals("stop")) {
-//                    logger.debug("(FunctionDispatcher) function " + procedure.getName() + " is cancelled.");
-//                    break;
-//                }
-//
-//                line.accept(evaluator);
-//                result = evaluator.getResult();
-//            }
-//        }
-//
-//        if (!procedure.isMacro()) {
-//            unscope();
-//        }
-//
-//        callStack.remove(callStack.size() - 1);
-//
-//        return result;
-//    }
-
-//    private boolean checkIfRecursiveCall(String name) {
-//
-//        if (scopeStack.size() < 2) {
-//            return false;
-//        }
-//        if (callStack.size() < 2) {
-//            return false;
-//        }
-//
-//        for (int i = scopeStack.size() - 2; i >= 0; i--) {
-//            if (scopeStack.get(i).getScopeName().equals(name)) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-
-//    private void removeRecursion(String name) {
-//        Scope actualScope = scopeStack.get(scopeStack.size() - 1);
-//        Procedure actualCall = callStack.get(callStack.size() - 1);
-//
-//        // Remove scopes
-//        // First one needs to be removed anyway
-//        scopeStack.remove(scopeStack.size() - 1);
-//        for (int i = scopeStack.size() - 1; i >= 0; i--) {
-//            if (scopeStack.get(i).getScopeName().equals(name)) {
-//                scopeStack.add(actualScope);
-//                break;
-//            } else {
-//                scopeStack.remove(i);
-//            }
-//        }
-//
-//        // Remove calls
-//        // First one needs to be removed anyway
-//        callStack.remove(callStack.size() - 1);
-//        for (int i = callStack.size() - 1; i >= 0; i--) {
-//            if (callStack.get(i).getName().equals(name)) {
-//                callStack.add(actualCall);
-//                break;
-//            } else {
-//                callStack.remove(i);
-//            }
-//        }
-//    }
-
-    /**
-     * Procedure management functionality
-     */
-//    public void define(Procedure function) {
-//        procedures.put(function.getName(), function);
-////        arities.put(function.getName(), function.getArity());
-//    }
-//
-//    public Boolean defined(String name) {
-//        return procedures.containsKey(name);
-//    }
-//
-//    public Map<String, Procedure> getProcedures() {
-//        return procedures;
-//    }
-//
-//    public void alias(String original, String alias) {
-//        if (!(procedures.containsKey(original))) {
-//            throw new FunctionNotFoundException(original);
-//        }
-//
-//        procedures.put(alias, procedures.get(original));
-//    }
 
     public Interpreter loadStdLib() {
 

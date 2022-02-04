@@ -72,9 +72,9 @@ public class ScopingTest {
     public void testMake() {
         it.eval("make \"testit \"someval");
 
-        assertThat(it.resolveable("testit"), is(true));
-        assertThat(it.resolve("testit").type(), is(NodeType.QUOTE));
-        assertThat(it.resolve("testit").toQuotedWord().getQuote(), is("someval"));
+        assertThat(it.env().resolveable("testit"), is(true));
+        assertThat(it.env().resolve("testit").type(), is(NodeType.QUOTE));
+        assertThat(it.env().resolve("testit").toQuotedWord().getQuote(), is("someval"));
     }
 
     @Test
@@ -86,9 +86,9 @@ public class ScopingTest {
         sb.append("makeinproc").append("\n");
         Node res = it.eval(sb.toString());
 
-        assertThat(it.resolveable("testvar"), is(true));
-        assertThat(it.resolve("testvar").type(), is(NodeType.INTEGER));
-        assertThat(it.resolve("testvar").toIntegerWord().getInteger(), is(10));
+        assertThat(it.env().resolveable("testvar"), is(true));
+        assertThat(it.env().resolve("testvar").type(), is(NodeType.INTEGER));
+        assertThat(it.env().resolve("testvar").toIntegerWord().getInteger(), is(10));
     }
 
     @Test
@@ -97,9 +97,9 @@ public class ScopingTest {
         sb.append("if true [make \"testvar 10]").append("\n");
         Node res = it.eval(sb.toString());
 
-        assertThat(it.resolveable("testvar"), is(true));
-        assertThat(it.resolve("testvar").type(), is(NodeType.INTEGER));
-        assertThat(it.resolve("testvar").toIntegerWord().getInteger(), is(10));
+        assertThat(it.env().resolveable("testvar"), is(true));
+        assertThat(it.env().resolve("testvar").type(), is(NodeType.INTEGER));
+        assertThat(it.env().resolve("testvar").toIntegerWord().getInteger(), is(10));
     }
 
     @Test
@@ -112,9 +112,9 @@ public class ScopingTest {
         sb.append("makeinproc").append("\n");
         Node res = it.eval(sb.toString());
 
-        assertThat(it.resolveable("testvar"), is(true));
-        assertThat(it.resolve("testvar").type(), is(NodeType.INTEGER));
-        assertThat(it.resolve("testvar").toIntegerWord().getInteger(), is(10));
+        assertThat(it.env().resolveable("testvar"), is(true));
+        assertThat(it.env().resolve("testvar").type(), is(NodeType.INTEGER));
+        assertThat(it.env().resolve("testvar").toIntegerWord().getInteger(), is(10));
     }
 
     @Test
@@ -129,9 +129,9 @@ public class ScopingTest {
         sb.append("print :testvar").append("\n");
         Node res = it.eval(sb.toString());
 
-        assertThat(it.resolveable("testvar"), is(true));
-        assertThat(it.resolve("testvar").type(), is(NodeType.INTEGER));
-        assertThat(it.resolve("testvar").toIntegerWord().getInteger(), is(20));
+        assertThat(it.env().resolveable("testvar"), is(true));
+        assertThat(it.env().resolve("testvar").type(), is(NodeType.INTEGER));
+        assertThat(it.env().resolve("testvar").toIntegerWord().getInteger(), is(20));
 
         assertThat(outputs.size(), is(2));
         assertThat(outputs.get(0), is("10\n"));
@@ -155,9 +155,9 @@ public class ScopingTest {
         sb.append("print :testvar").append("\n");
         Node res = it.eval(sb.toString());
 
-        assertThat(it.resolveable("testvar"), is(true));
-        assertThat(it.resolve("testvar").type(), is(NodeType.INTEGER));
-        assertThat(it.resolve("testvar").toIntegerWord().getInteger(), is(20));
+        assertThat(it.env().resolveable("testvar"), is(true));
+        assertThat(it.env().resolve("testvar").type(), is(NodeType.INTEGER));
+        assertThat(it.env().resolve("testvar").toIntegerWord().getInteger(), is(20));
 
         assertThat(outputs.size(), is(2));
         assertThat(outputs.get(0), is("10\n"));
@@ -175,9 +175,9 @@ public class ScopingTest {
         sb.append("print :testvar").append("\n");
         Node res = it.eval(sb.toString());
 
-        assertThat(it.resolveable("testvar"), is(true));
-        assertThat(it.resolve("testvar").type(), is(NodeType.INTEGER));
-        assertThat(it.resolve("testvar").toIntegerWord().getInteger(), is(10));
+        assertThat(it.env().resolveable("testvar"), is(true));
+        assertThat(it.env().resolve("testvar").type(), is(NodeType.INTEGER));
+        assertThat(it.env().resolve("testvar").toIntegerWord().getInteger(), is(10));
 
         assertThat(outputs.size(), is(2));
         assertThat(outputs.get(0), is("10\n"));
