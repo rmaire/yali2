@@ -103,8 +103,8 @@ public class ControlTest {
 
         it.eval(input);
 
-        assertThat(it.scope().defined("varone"), is(true));
-        assertThat(it.scope().resolve("varone").toQuotedWord().getQuote(), is("test"));
+        assertThat(it.env().peek().defined("varone"), is(true));
+        assertThat(it.env().peek().resolve("varone").toQuotedWord().getQuote(), is("test"));
     }
 
     @Test

@@ -52,7 +52,7 @@ public class Interpreter implements OutputObserver {
     private static final Logger logger = LoggerFactory.getLogger(Interpreter.class);
 
     // Function definitions
-    private Map<String, Procedure> functions = new HashMap<>();
+    private Map<String, Procedure> procedures = new HashMap<>();
 
     // Call stack
     private List<Procedure> callStack = new ArrayList<>();
@@ -90,31 +90,17 @@ public class Interpreter implements OutputObserver {
         return node;
     }
 
+    public Environment env() {
+        return env;
+    }
+
     /**
      * Variable management
      */
-//    public void make(String name, Node value) {
-//
-//        for (int i = scopeStack.size() - 1; i >= 0; i--) {
-//            if (scopeStack.get(i).defined(name)) {
-//                logger.debug("(Scope) defining variable " + name + " in scope " + scopeStack.get(i).getScopeName());
-//                scopeStack.get(i).define(name.toLowerCase(), value);
-//                return;
-//            }
-//        }
-//
-//        logger.debug("(Scope) defining variable " + name + " in scope " + scopeStack.get(0).getScopeName());
-//        scopeStack.get(0).define(name.toLowerCase(), value);
-//    }
-//
-//    public void local(String name) {
-//        logger.debug("(Scope) Reserve local variable " + name + " in scope " + scope().getScopeName());
-//        scope().local(name.toLowerCase());
-//    }
 
-    public Scope scope() {
-        return env.peek();
-    }
+//    public Scope scope() {
+//        return env.peek();
+//    }
 
     public void scope(String name) {
         Scope newScope = new Scope(name);
@@ -133,13 +119,13 @@ public class Interpreter implements OutputObserver {
         return env.resolveable(name);
     }
     
-    public void make(String name, Node value) {
-        env.make(name, value);
-    }
+//    public void make(String name, Node value) {
+//        env.make(name, value);
+//    }
     
-    public void local(String name) {
-        env.local(name);
-    }
+//    public void local(String name) {
+//        env.local(name);
+//    }
 
     public java.util.List<String> stringify(Node arg) {
         java.util.List<String> stringifiedArgs = new ArrayList<>();
@@ -167,20 +153,17 @@ public class Interpreter implements OutputObserver {
 
     public Node apply(Call call) {
 
-        logger.debug("(FunctionDispatcher) dispatch function " + call.name() + " with scope " + scope().getScopeName());
+        logger.debug("(FunctionDispatcher) dispatch function " + call.name() + " with scope " + env().peek().getScopeName());
 
-        if (!functions.containsKey(call.name())) {
+        if (!procedures.containsKey(call.name())) {
             throw new FunctionNotFoundException(call.name());
         }
 
-        Procedure procedure = functions.get(call.name());
+        Procedure procedure = procedures.get(call.name());
 
         callStack.add(procedure);
 
         // TODO check last function call for recursion
-//        if (checkIfRecursiveCall(call.name())) {
-//            removeRecursion(call.name());
-//        }
 
         Node result = Node.nil();
 
@@ -193,7 +176,7 @@ public class Interpreter implements OutputObserver {
 
             logger.debug("(FunctionDispatcher) native function");
 
-            result = procedure.getNativeCall().apply(scope(), call.args());
+            result = procedure.getNativeCall().apply(env().peek(), call.args());
 
         } else {
             logger.debug("(FunctionDispatcher) non-native function");
@@ -278,24 +261,24 @@ public class Interpreter implements OutputObserver {
      * Procedure management functionality
      */
     public void define(Procedure function) {
-        functions.put(function.getName(), function);
+        procedures.put(function.getName(), function);
 //        arities.put(function.getName(), function.getArity());
     }
 
     public Boolean defined(String name) {
-        return functions.containsKey(name);
+        return procedures.containsKey(name);
     }
 
     public Map<String, Procedure> getProcedures() {
-        return functions;
+        return procedures;
     }
 
     public void alias(String original, String alias) {
-        if (!(functions.containsKey(original))) {
+        if (!(procedures.containsKey(original))) {
             throw new FunctionNotFoundException(original);
         }
 
-        functions.put(alias, functions.get(original));
+        procedures.put(alias, procedures.get(original));
     }
 
     public Interpreter loadStdLib() {

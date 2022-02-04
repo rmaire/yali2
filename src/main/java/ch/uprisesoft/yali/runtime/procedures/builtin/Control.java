@@ -65,9 +65,6 @@ public class Control implements ProcedureProvider {
         Scope workScope = scope;
         
         // Variable should be defined in calling scope, not in make scope
-//        if (scope.getEnclosingScope().isPresent()) {
-//            workScope = scope.getEnclosingScope().get();
-//        }
         
         switch (args.get(0).type()) {
             case SYMBOL:
@@ -82,7 +79,7 @@ public class Control implements ProcedureProvider {
         
         logger.debug("(Control) defining variable " + name + " in scope " + workScope.getScopeName());
 
-        it.local(name);
+        it.env().local(name);
 
         return Node.nil();
     }
@@ -106,7 +103,7 @@ public class Control implements ProcedureProvider {
         logger.debug("(Control) defining variable " + name + " in scope " + workScope.getScopeName());
 
         newVar = args.get(1);
-        it.make(name, newVar);
+        it.env().make(name, newVar);
 
         return newVar;
     }
@@ -130,8 +127,8 @@ public class Control implements ProcedureProvider {
         logger.debug("(Control) defining variable " + name + " in scope " + workScope.getScopeName());
 
         newVar = args.get(1);
-        it.local(name);
-        it.make(name, newVar);
+        it.env().local(name);
+        it.env().make(name, newVar);
 
         return newVar;
     }
