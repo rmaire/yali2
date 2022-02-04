@@ -29,6 +29,7 @@ import ch.uprisesoft.yali.ast.node.word.ReferenceWord;
 import ch.uprisesoft.yali.ast.node.word.SymbolWord;
 import ch.uprisesoft.yali.runtime.interpreter.Interpreter;
 import ch.uprisesoft.yali.runtime.procedures.FunctionNotFoundException;
+import ch.uprisesoft.yali.scope.Environment;
 import ch.uprisesoft.yali.scope.Scope;
 import java.util.ArrayList;
 import org.slf4j.Logger;
@@ -42,10 +43,11 @@ public class TreeWalkEvaluator implements Evaluator {
 
     private static final Logger logger = LoggerFactory.getLogger(TreeWalkEvaluator.class);
 
-    private final Interpreter it;
+//    private final Interpreter it;
+    private final Environment it;
     protected Node result = Node.none();
 
-    public TreeWalkEvaluator(Interpreter it) {
+    public TreeWalkEvaluator(Environment it) {
         this.it = it;
     }
 
@@ -125,7 +127,7 @@ public class TreeWalkEvaluator implements Evaluator {
         for (Node c : call.getChildren()) {
             c.accept(this);
             if (i < funDef.getArity()) {
-                it.env().make(
+                it.make(
                         funDef.getArgs().get(i),
                         result
                 );

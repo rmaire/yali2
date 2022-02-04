@@ -96,7 +96,7 @@ public class Reader {
                 advance();
 
                 fun.setPosInSource(defStartToken.getLine(), defStartToken.getPos());
-                functions.define(fun);
+                functions.env().define(fun);
 
                 pw.indentRight();
                 pw.writeln(fun.header());
@@ -121,7 +121,7 @@ public class Reader {
                 String original = consume(TokenType.QUOTE).getLexeme().substring(1);
                 String alias = consume(TokenType.QUOTE).getLexeme().substring(1);
 
-                functions.alias(original, alias);
+                functions.env().alias(original, alias);
 
                 advance();
 
@@ -164,7 +164,7 @@ public class Reader {
 
         if (match(TokenType.TO)) {
 
-            Procedure fun = functions.getProcedures().get(consume(TokenType.SYMBOL).getLexeme());
+            Procedure fun = functions.env().getProcedures().get(consume(TokenType.SYMBOL).getLexeme());
             pw.indentRight();
             logger.debug("Fundef Body parsing start");
             pw.writeln("Fundef Body start: " + fun.getName());
@@ -190,7 +190,7 @@ public class Reader {
 
             match(TokenType.NEWLINE);
 
-            functions.define(fun);
+            functions.env().define(fun);
 
             pw.indentLeft();
             pw.writeln("Fundef Body end: " + fun.getName());
@@ -207,9 +207,9 @@ public class Reader {
     private Node funCall() {
         Node node = Node.none();
 
-        if (current().type().equals(TokenType.SYMBOL) && functions.getProcedures().containsKey(current().getLexeme().toLowerCase())) {
+        if (current().type().equals(TokenType.SYMBOL) && functions.env().getProcedures().containsKey(current().getLexeme().toLowerCase())) {
 
-            if (!functions.getProcedures().containsKey(current().getLexeme().toLowerCase())) {
+            if (!functions.env().getProcedures().containsKey(current().getLexeme().toLowerCase())) {
                 throw new FunctionNotFoundException(current().getLexeme().toLowerCase());
             }
 
@@ -217,11 +217,11 @@ public class Reader {
             pw.indentRight();
 
             String name = current().getLexeme();
-            int arity = functions.getProcedures().get(name).getArity();
+            int arity = functions.env().getProcedures().get(name).getArity();
             advance();
 
             Call call = new Call(name, arity);
-            call.code(functions.getProcedures().get(name));
+            call.code(functions.env().getProcedures().get(name));
             call.setPosInSource(current().getLine(), current().getPos());
             node = call;
 
@@ -256,14 +256,14 @@ public class Reader {
 
             if (operator.equals(TokenType.EQUAL) || operator.equals(TokenType.EQUAL_EQUAL)) {
                 Call call = new Call("equal?", 2);
-                call.code(functions.getProcedures().get("equal?"));
+                call.code(functions.env().getProcedures().get("equal?"));
                 call.setPosInSource(current().getLine(), current().getPos());
                 node = call;
             }
 
             if (operator.equals(TokenType.BANG_EQUAL)) {
                 Call call = new Call("notequal?", 2);
-                call.code(functions.getProcedures().get("notequal?"));
+                call.code(functions.env().getProcedures().get("notequal?"));
                 call.setPosInSource(current().getLine(), current().getPos());
                 node = call;
             }
@@ -290,28 +290,28 @@ public class Reader {
 
             if (operator.equals(TokenType.LESS)) {
                 Call call = new Call("less?", 2);
-                call.code(functions.getProcedures().get("less?"));
+                call.code(functions.env().getProcedures().get("less?"));
                 call.setPosInSource(current().getLine(), current().getPos());
                 node = call;
             }
 
             if (operator.equals(TokenType.GREATER)) {
                 Call call = new Call("greater?", 2);
-                call.code(functions.getProcedures().get("greater?"));
+                call.code(functions.env().getProcedures().get("greater?"));
                 call.setPosInSource(current().getLine(), current().getPos());
                 node = call;
             }
 
             if (operator.equals(TokenType.LESS_EQUAL)) {
                 Call call = new Call("lessequal?", 2);
-                call.code(functions.getProcedures().get("lessequal?"));
+                call.code(functions.env().getProcedures().get("lessequal?"));
                 call.setPosInSource(current().getLine(), current().getPos());
                 node = call;
             }
 
             if (operator.equals(TokenType.GREATER_EQUAL)) {
                 Call call = new Call("greaterequal?", 2);
-                call.code(functions.getProcedures().get("greaterequal?"));
+                call.code(functions.env().getProcedures().get("greaterequal?"));
                 call.setPosInSource(current().getLine(), current().getPos());
                 node = call;
             }
@@ -338,14 +338,14 @@ public class Reader {
 
             if (operator.equals(TokenType.PLUS)) {
                 Call call = new Call("add", 2);
-                call.code(functions.getProcedures().get("add"));
+                call.code(functions.env().getProcedures().get("add"));
                 call.setPosInSource(current().getLine(), current().getPos());
                 node = call;
             }
 
             if (operator.equals(TokenType.MINUS)) {
                 Call call = new Call("sub", 2);
-                call.code(functions.getProcedures().get("sub"));
+                call.code(functions.env().getProcedures().get("sub"));
                 call.setPosInSource(current().getLine(), current().getPos());
                 node = call;
             }
@@ -369,14 +369,14 @@ public class Reader {
 
             if (operator.equals(TokenType.STAR)) {
                 Call call = new Call("mul", 2);
-                call.code(functions.getProcedures().get("mul"));
+                call.code(functions.env().getProcedures().get("mul"));
                 call.setPosInSource(current().getLine(), current().getPos());
                 node = call;
             }
 
             if (operator.equals(TokenType.SLASH)) {
                 Call call = new Call("div", 2);
-                call.code(functions.getProcedures().get("div"));
+                call.code(functions.env().getProcedures().get("div"));
                 call.setPosInSource(current().getLine(), current().getPos());
                 node = call;
             }

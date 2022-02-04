@@ -52,10 +52,10 @@ public class Interpreter implements OutputObserver {
     private static final Logger logger = LoggerFactory.getLogger(Interpreter.class);
 
     // Function definitions
-    private Map<String, Procedure> procedures = new HashMap<>();
+//    private Map<String, Procedure> procedures = new HashMap<>();
 
     // Call stack
-    private List<Procedure> callStack = new ArrayList<>();
+//    private List<Procedure> callStack = new ArrayList<>();
     
     private Environment env = new Environment();
 
@@ -74,7 +74,7 @@ public class Interpreter implements OutputObserver {
 
     public Node eval(Node node) {
 
-        TreeWalkEvaluator eval = new TreeWalkEvaluator(this);
+        TreeWalkEvaluator eval = new TreeWalkEvaluator(env);
         try {
             node.accept(eval);
         } catch (StackOverflowError soe) {
@@ -151,65 +151,65 @@ public class Interpreter implements OutputObserver {
         return stringifiedArgs;
     }
 
-    public Node apply(Call call) {
-
-        logger.debug("(FunctionDispatcher) dispatch function " + call.name() + " with scope " + env().peek().getScopeName());
-
-        if (!procedures.containsKey(call.name())) {
-            throw new FunctionNotFoundException(call.name());
-        }
-
-        Procedure procedure = procedures.get(call.name());
-
-        callStack.add(procedure);
-
-        // TODO check last function call for recursion
-
-        Node result = Node.nil();
-
-        if (!procedure.isMacro()) {
-            scope(procedure.getName());
-        }
-
-        // TODO differentiate from macros
-        if (procedure.isNative() || procedure.isMacro()) {
-
-            logger.debug("(FunctionDispatcher) native function");
-
-            result = procedure.getNativeCall().apply(env().peek(), call.args());
-
-        } else {
-            logger.debug("(FunctionDispatcher) non-native function");
-
-            TreeWalkEvaluator evaluator = new TreeWalkEvaluator(this);
-
-            for (Node line : procedure.getChildren()) {
-
-                // every direct child should be a function call
-                if (!line.type().equals(NodeType.PROCCALL)) {
-                    throw new NodeTypeException(line, line.type(), NodeType.PROCCALL);
-                }
-
-                // Check if function call is output or stop. If yes, no further
-                // lines will be evaluated
-                if (line.toCall().name().equals("output") || line.toCall().name().equals("stop")) {
-                    logger.debug("(FunctionDispatcher) function " + procedure.getName() + " is cancelled.");
-                    break;
-                }
-
-                line.accept(evaluator);
-                result = evaluator.getResult();
-            }
-        }
-
-        if (!procedure.isMacro()) {
-            unscope();
-        }
-
-        callStack.remove(callStack.size() - 1);
-
-        return result;
-    }
+//    public Node apply(Call call) {
+//
+//        logger.debug("(FunctionDispatcher) dispatch function " + call.name() + " with scope " + env().peek().getScopeName());
+//
+//        if (!procedures.containsKey(call.name())) {
+//            throw new FunctionNotFoundException(call.name());
+//        }
+//
+//        Procedure procedure = procedures.get(call.name());
+//
+//        callStack.add(procedure);
+//
+//        // TODO check last function call for recursion
+//
+//        Node result = Node.nil();
+//
+//        if (!procedure.isMacro()) {
+//            scope(procedure.getName());
+//        }
+//
+//        // TODO differentiate from macros
+//        if (procedure.isNative() || procedure.isMacro()) {
+//
+//            logger.debug("(FunctionDispatcher) native function");
+//
+//            result = procedure.getNativeCall().apply(env().peek(), call.args());
+//
+//        } else {
+//            logger.debug("(FunctionDispatcher) non-native function");
+//
+//            TreeWalkEvaluator evaluator = new TreeWalkEvaluator(this);
+//
+//            for (Node line : procedure.getChildren()) {
+//
+//                // every direct child should be a function call
+//                if (!line.type().equals(NodeType.PROCCALL)) {
+//                    throw new NodeTypeException(line, line.type(), NodeType.PROCCALL);
+//                }
+//
+//                // Check if function call is output or stop. If yes, no further
+//                // lines will be evaluated
+//                if (line.toCall().name().equals("output") || line.toCall().name().equals("stop")) {
+//                    logger.debug("(FunctionDispatcher) function " + procedure.getName() + " is cancelled.");
+//                    break;
+//                }
+//
+//                line.accept(evaluator);
+//                result = evaluator.getResult();
+//            }
+//        }
+//
+//        if (!procedure.isMacro()) {
+//            unscope();
+//        }
+//
+//        callStack.remove(callStack.size() - 1);
+//
+//        return result;
+//    }
 
 //    private boolean checkIfRecursiveCall(String name) {
 //
@@ -260,26 +260,26 @@ public class Interpreter implements OutputObserver {
     /**
      * Procedure management functionality
      */
-    public void define(Procedure function) {
-        procedures.put(function.getName(), function);
-//        arities.put(function.getName(), function.getArity());
-    }
-
-    public Boolean defined(String name) {
-        return procedures.containsKey(name);
-    }
-
-    public Map<String, Procedure> getProcedures() {
-        return procedures;
-    }
-
-    public void alias(String original, String alias) {
-        if (!(procedures.containsKey(original))) {
-            throw new FunctionNotFoundException(original);
-        }
-
-        procedures.put(alias, procedures.get(original));
-    }
+//    public void define(Procedure function) {
+//        procedures.put(function.getName(), function);
+////        arities.put(function.getName(), function.getArity());
+//    }
+//
+//    public Boolean defined(String name) {
+//        return procedures.containsKey(name);
+//    }
+//
+//    public Map<String, Procedure> getProcedures() {
+//        return procedures;
+//    }
+//
+//    public void alias(String original, String alias) {
+//        if (!(procedures.containsKey(original))) {
+//            throw new FunctionNotFoundException(original);
+//        }
+//
+//        procedures.put(alias, procedures.get(original));
+//    }
 
     public Interpreter loadStdLib() {
 

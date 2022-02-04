@@ -336,71 +336,71 @@ public class ParserTest {
         assertThat(result.getChildren().get(0).toReferenceWord().getReference(), is("testit"));
     }
 
-    @Test
-    public void testFunDefLiteral() {
-        
-        Reader p = parseAndReturnParser("TO bla :blubb :bli\nprint [Hello World]\nfd 100\nEND");
-        Procedure result = p.getFunctions().getProcedures().get("bla").toProcedureDef();
-
-        assertThat(result.type(), is(NodeType.PROCEDURE));
-        assertThat(result.getName(), is("bla"));
-        assertThat(result.getArity(), is(2));
-        assertThat(result.getArgs().size(), is(2));
-        assertThat(result.getArgs().get(0), is("blubb"));
-        assertThat(result.getArgs().get(1), is("bli"));
-
-        assertThat(result.getChildren().size(), is(2));
-        assertThat(result.getChildren().get(0).type(), is(NodeType.PROCCALL));
-
-        assertThat(result.getChildren().get(0).toCall().name(), is("print"));
-        assertThat(result.getChildren().get(0).toCall().getChildren().size(), is(1));
-
-        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).type(), is(NodeType.LIST));
-        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).toList().getChildren().size(), is(2));
-
-        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(0).type(), is(NodeType.SYMBOL));
-        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(0).toSymbolWord().getSymbol(), is("Hello"));
-        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(1).type(), is(NodeType.SYMBOL));
-        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(1).toSymbolWord().getSymbol(), is("World"));
-
-        assertThat(result.getChildren().get(1).type(), is(NodeType.PROCCALL));
-    }
+//    @Test
+//    public void testFunDefLiteral() {
+//        
+//        Reader p = parseAndReturnParser("TO bla :blubb :bli\nprint [Hello World]\nfd 100\nEND");
+//        Procedure result = p.getFunctions().getProcedures().get("bla").toProcedureDef();
+//
+//        assertThat(result.type(), is(NodeType.PROCEDURE));
+//        assertThat(result.getName(), is("bla"));
+//        assertThat(result.getArity(), is(2));
+//        assertThat(result.getArgs().size(), is(2));
+//        assertThat(result.getArgs().get(0), is("blubb"));
+//        assertThat(result.getArgs().get(1), is("bli"));
+//
+//        assertThat(result.getChildren().size(), is(2));
+//        assertThat(result.getChildren().get(0).type(), is(NodeType.PROCCALL));
+//
+//        assertThat(result.getChildren().get(0).toCall().name(), is("print"));
+//        assertThat(result.getChildren().get(0).toCall().getChildren().size(), is(1));
+//
+//        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).type(), is(NodeType.LIST));
+//        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).toList().getChildren().size(), is(2));
+//
+//        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(0).type(), is(NodeType.SYMBOL));
+//        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(0).toSymbolWord().getSymbol(), is("Hello"));
+//        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(1).type(), is(NodeType.SYMBOL));
+//        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(1).toSymbolWord().getSymbol(), is("World"));
+//
+//        assertThat(result.getChildren().get(1).type(), is(NodeType.PROCCALL));
+//    }
     
-    @Test
-    public void testFunDefStringBuilder() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("TO bla :blubb :bli").append("\n");
-        sb.append("print [Hello World]").append("\n");
-        sb.append("fd 100").append("\n");
-        sb.append("END").append("\n");
-
-//        Node result = read(sb.toString());
-        Reader p = parseAndReturnParser(sb.toString());
-        Procedure result = p.getFunctions().getProcedures().get("bla").toProcedureDef();
-
-        assertThat(result.type(), is(NodeType.PROCEDURE));
-        assertThat(result.getName(), is("bla"));
-        assertThat(result.getArity(), is(2));
-        assertThat(result.getArgs().size(), is(2));
-        assertThat(result.getArgs().get(0), is("blubb"));
-        assertThat(result.getArgs().get(1), is("bli"));
-
-        assertThat(result.getChildren().size(), is(2));
-        assertThat(result.getChildren().get(0).type(), is(NodeType.PROCCALL));
-
-        assertThat(result.getChildren().get(0).toCall().name(), is("print"));
-        assertThat(result.getChildren().get(0).toCall().getChildren().size(), is(1));
-
-        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).type(), is(NodeType.LIST));
-        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).toList().getChildren().size(), is(2));
-
-        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(0).type(), is(NodeType.SYMBOL));
-        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(0).toSymbolWord().getSymbol(), is("Hello"));
-        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(1).type(), is(NodeType.SYMBOL));
-        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(1).toSymbolWord().getSymbol(), is("World"));
-
-        assertThat(result.getChildren().get(1).type(), is(NodeType.PROCCALL));
-    }
+//    @Test
+//    public void testFunDefStringBuilder() {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("TO bla :blubb :bli").append("\n");
+//        sb.append("print [Hello World]").append("\n");
+//        sb.append("fd 100").append("\n");
+//        sb.append("END").append("\n");
+//
+////        Node result = read(sb.toString());
+//        Reader p = parseAndReturnParser(sb.toString());
+//        Procedure result = p.getFunctions().getProcedures().get("bla").toProcedureDef();
+//
+//        assertThat(result.type(), is(NodeType.PROCEDURE));
+//        assertThat(result.getName(), is("bla"));
+//        assertThat(result.getArity(), is(2));
+//        assertThat(result.getArgs().size(), is(2));
+//        assertThat(result.getArgs().get(0), is("blubb"));
+//        assertThat(result.getArgs().get(1), is("bli"));
+//
+//        assertThat(result.getChildren().size(), is(2));
+//        assertThat(result.getChildren().get(0).type(), is(NodeType.PROCCALL));
+//
+//        assertThat(result.getChildren().get(0).toCall().name(), is("print"));
+//        assertThat(result.getChildren().get(0).toCall().getChildren().size(), is(1));
+//
+//        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).type(), is(NodeType.LIST));
+//        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).toList().getChildren().size(), is(2));
+//
+//        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(0).type(), is(NodeType.SYMBOL));
+//        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(0).toSymbolWord().getSymbol(), is("Hello"));
+//        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(1).type(), is(NodeType.SYMBOL));
+//        assertThat(result.getChildren().get(0).toCall().getChildren().get(0).getChildren().get(1).toSymbolWord().getSymbol(), is("World"));
+//
+//        assertThat(result.getChildren().get(1).type(), is(NodeType.PROCCALL));
+//    }
 
 
 

@@ -63,7 +63,7 @@ public class Template implements ProcedureProvider {
                     }
                 }
                 Call run = new Call("run");
-                run.code(it.getProcedures().get("run"));
+                run.code(it.env().getProcedures().get("run"));
                 run.addChild(new List(realizedValues));
                 results.add(Node.symbol(it.eval(run).toString()));
             }
@@ -85,7 +85,7 @@ public class Template implements ProcedureProvider {
                     }
                 }
                 Call run = new Call("run");
-                run.code(it.getProcedures().get("run"));
+                run.code(it.env().getProcedures().get("run"));
                 run.addChild(new List(realizedValues));
                 results += it.eval(run).toString();
             }
@@ -122,7 +122,7 @@ public class Template implements ProcedureProvider {
                     }
                 }
                 Call run = new Call("run");
-                run.code(it.getProcedures().get("run"));
+                run.code(it.env().getProcedures().get("run"));
                 run.addChild(new List(realizedValues));
                 Node result = it.eval(run);
 
@@ -152,7 +152,7 @@ public class Template implements ProcedureProvider {
                     }
                 }
                 Call run = new Call("run");
-                run.code(it.getProcedures().get("run"));
+                run.code(it.env().getProcedures().get("run"));
                 run.addChild(new List(realizedValues));
                 Node result = it.eval(run);
 
@@ -194,7 +194,7 @@ public class Template implements ProcedureProvider {
                     }
                 }
                 Call run = new Call("run");
-                run.code(it.getProcedures().get("run"));
+                run.code(it.env().getProcedures().get("run"));
                 run.addChild(new List(realizedValues));
                 Node result = it.eval(run);
 
@@ -221,7 +221,7 @@ public class Template implements ProcedureProvider {
                     }
                 }
                 Call run = new Call("run");
-                run.code(it.getProcedures().get("run"));
+                run.code(it.env().getProcedures().get("run"));
                 run.addChild(new List(realizedValues));
                 Node result = it.eval(run);
 
@@ -283,9 +283,9 @@ public class Template implements ProcedureProvider {
     public Interpreter registerProcedures(Interpreter interpreter) {
         this.it = interpreter;
 
-        it.define(new Procedure("map", (scope, val) -> this.map(scope, val), "template", "values"));
-        it.define(new Procedure("filter", (scope, val) -> this.filter(scope, val), "template", "values"));
-        it.define(new Procedure("find", (scope, val) -> this.find(scope, val), "template", "values"));
+        it.env().define(new Procedure("map", (scope, val) -> this.map(scope, val), "template", "values"));
+        it.env().define(new Procedure("filter", (scope, val) -> this.filter(scope, val), "template", "values"));
+        it.env().define(new Procedure("find", (scope, val) -> this.find(scope, val), "template", "values"));
 
         return it;
     }
