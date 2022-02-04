@@ -35,16 +35,15 @@ public class Scope {
     private Optional<Scope> enclosingScope = Optional.empty();
     private Map<String, Node> members = new HashMap<>();
     
-    private Node code = Node.nil();
 
     public Scope(String scopeName) {
         this.scopeName = scopeName;
     }
     
-    public Scope(Call code, String scopeName) {
-        this.code = code;
-        this.scopeName = scopeName;
-    }
+//    public Scope(Call code, String scopeName) {
+//        this.code = code;
+//        this.scopeName = scopeName;
+//    }
 
     public String getScopeName() {
         return scopeName;
@@ -54,9 +53,9 @@ public class Scope {
 //        return enclosingScope;
 //    }
 
-    public Node getCode() {
-        return code;
-    }
+//    public Node getCode() {
+//        return code;
+//    }
 
     public Node resolve(String name) {
         logger.debug("(Scope) resolving variable " + name + " in scope " + scopeName);
