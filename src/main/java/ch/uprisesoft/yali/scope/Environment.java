@@ -28,12 +28,24 @@ public class Environment {
     private static final Logger logger = LoggerFactory.getLogger(Environment.class);
 
     private Map<String, Procedure> procedures = new HashMap<>();
-
     private List<Scope> scopeStack = new ArrayList<>();
-    private List<Procedure> callStack = new ArrayList<>();
+    private List<Call> callStack = new ArrayList<>();
 
     {
         scopeStack.add(new Scope("global"));
+    }
+    
+    public void schedule(Call call) {
+        callStack.add(call);
+    }
+    
+    public boolean tick() {
+    
+        if(callStack.isEmpty()) {
+            return false;
+        }
+        
+        return true;
     }
 
     public Node apply(Call call) {
@@ -46,7 +58,7 @@ public class Environment {
 
         Procedure procedure = procedures.get(call.name());
 
-        callStack.add(procedure);
+        callStack.add(call);
 
         // TODO check last function call for recursion
         Node result = Node.nil();
