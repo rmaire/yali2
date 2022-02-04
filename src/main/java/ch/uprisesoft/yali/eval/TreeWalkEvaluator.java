@@ -121,8 +121,6 @@ public class TreeWalkEvaluator implements Evaluator {
         java.util.List<Node> args = new ArrayList<>();
 
         // TODO differentiate between procedures and macros (called with parent scope)
-
-        
         int i = 0;
         for (Node c : call.getChildren()) {
             c.accept(this);
@@ -135,13 +133,18 @@ public class TreeWalkEvaluator implements Evaluator {
             }
             args.add(result);
         }
-        
+
         call.args(args);
 
         logger.debug("(eval) dispatching " + call.name());
         result = it.apply(call);
-        logger.debug("(eval) Function Call " + call.name() + " end");
         
+//        result = it.schedule(call);
+//        it.schedule(call);
+//        while(it.tick()) {}
+//        result = it.result();
+        logger.debug("(eval) Function Call " + call.name() + " end");
+
     }
 
     public Node getResult() {

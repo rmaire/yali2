@@ -30,6 +30,8 @@ public class Environment {
     private Map<String, Procedure> procedures = new HashMap<>();
     private List<Scope> scopeStack = new ArrayList<>();
     private List<Call> callStack = new ArrayList<>();
+    
+    private Node lastResult = Node.none();
 
     {
         scopeStack.add(new Scope("global"));
@@ -39,13 +41,24 @@ public class Environment {
         callStack.add(call);
     }
     
+    private void unschedule() {
+        callStack.remove(callStack.size()-1);
+    }
+    
     public boolean tick() {
     
         if(callStack.isEmpty()) {
             return false;
         }
         
+        lastResult = apply(callStack.get(callStack.size()-1));
+        unschedule();
+        
         return true;
+    }
+    
+    public Node result() {
+        return lastResult;
     }
 
     public Node apply(Call call) {
